@@ -92,7 +92,7 @@ export default function LatestVideosSection({
                       <span>{latest[0].duration}</span>
                       <span>·</span>
                       <span>
-                        {new Date(latest[0].createdAt).toLocaleDateString()}
+                      {new Date(latest[0].createdAt).toLocaleDateString("en-GB")}
                       </span>
                     </div>
                   </div>

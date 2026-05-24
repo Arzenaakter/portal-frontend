@@ -28,7 +28,7 @@ type FormValues = {
 interface VideoFormProps {
   mode: "add" | "edit";
   initialData?: Partial<Video>;
-  onSubmit: (data: FormValues) => void;
+  onSubmit: (data: any) => void;
   onCancel: () => void;
 }
 
@@ -68,6 +68,8 @@ export default function Videoform({
   });
 
   const watchCategory = watch("category");
+
+
 
   useEffect(() => {
     const cat = CATEGORIES.find((c) => c.name === watchCategory);
