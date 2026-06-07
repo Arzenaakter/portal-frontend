@@ -1,22 +1,42 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import AdminHeader from "@/components/admin/Adminheader";
-import { MOCK_VIDEOS } from "@/types";
-import { Video, Users, Eye, TrendingUp, ArrowUpRight } from "lucide-react";
+import { Video } from "@/types";
+import { getVideosApi } from "@/lib/videoApi";
+import {
+  Video as VideoIcon,
+  Users,
+  Eye,
+  TrendingUp,
+  ArrowUpRight,
+  Loader2,
+} from "lucide-react";
 
 export default function AdminDashboardPage() {
-  const videos = MOCK_VIDEOS;
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getVideosApi()
+      .then((data) => setVideos(Array.isArray(data) ? data : (data.data ?? [])))
+      .catch(() => setVideos([]))
+      .finally(() => setLoading(false));
+  }, []);
+
   const totalViews = videos.reduce((sum, v) => sum + (v.views || 0), 0);
 
   const stats = [
     {
       label: "Total Videos",
-      value: videos.length,
-      icon: Video,
+      value: loading ? "—" : videos.length,
+      icon: VideoIcon,
       change: "+3 this week",
       color: "#e8ff47",
     },
     {
       label: "Total Views",
-      value: `${(totalViews / 1000).toFixed(1)}k`,
+      value: loading ? "—" : `${(totalViews / 1000).toFixed(1)}k`,
       icon: Eye,
       change: "+12% this month",
       color: "#47e8ff",
@@ -67,8 +87,7 @@ export default function AdminDashboardPage() {
                     color: "#4ade80",
                   }}
                 >
-                  <ArrowUpRight size={10} />
-                  Up
+                  <ArrowUpRight size={10} /> Up
                 </div>
               </div>
               <div
@@ -119,86 +138,122 @@ export default function AdminDashboardPage() {
               Manage all →
             </a>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr
-                  className="border-b"
-                  style={{ borderColor: "var(--border)" }}
-                >
-                  {["Title", "Category", "Views", "Date"].map((h) => (
-                    <th
-                      key={h}
-                      className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider"
-                      style={{
-                        color: "var(--muted-foreground)",
-                        fontFamily: "var(--font-display)",
-                      }}
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {videos.slice(0, 5).map((video) => (
+
+          {loading ? (
+            <div className="flex items-center justify-center py-16 gap-3">
+              <Loader2
+                size={20}
+                className="animate-spin"
+                style={{ color: "var(--primary)" }}
+              />
+              <span
+                className="text-sm"
+                style={{ color: "var(--muted-foreground)" }}
+              >
+                Loading videos...
+              </span>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
                   <tr
-                    key={video.id}
-                    className="border-b transition-colors hover:opacity-80"
+                    className="border-b"
                     style={{ borderColor: "var(--border)" }}
                   >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={video.thumbnail}
-                          alt=""
-                          className="w-12 h-8 rounded-lg object-cover"
-                        />
-                        <div>
-                          <p
-                            className="text-sm font-semibold line-clamp-1"
-                            style={{ fontFamily: "var(--font-display)" }}
-                          >
-                            {video.title}
-                          </p>
-                          <p
-                            className="text-xs"
-                            style={{ color: "var(--muted-foreground)" }}
-                          >
-                            {video.duration}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className="text-xs px-2 py-1 rounded-lg font-medium"
+                    {["Title", "Category", "Views", "Date"].map((h) => (
+                      <th
+                        key={h}
+                        className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider"
                         style={{
-                          background: "rgba(232,255,71,0.1)",
-                          color: "var(--primary)",
+                          color: "var(--muted-foreground)",
+                          fontFamily: "var(--font-display)",
                         }}
                       >
-                        {video.category}
-                      </span>
-                    </td>
-                    <td
-                      className="px-6 py-4 text-sm"
-                      style={{ color: "var(--muted-foreground)" }}
-                    >
-                      {((video.views || 0) / 1000).toFixed(1)}k
-                    </td>
-                    <td
-                      className="px-6 py-4 text-sm"
-                      style={{ color: "var(--muted-foreground)" }}
-                    >
-                      {new Date(video.createdAt).toLocaleDateString()}
-                    </td>
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {videos.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="text-center py-12 text-sm"
+                        style={{ color: "var(--muted-foreground)" }}
+                      >
+                        No videos yet.{" "}
+                        <a
+                          href="/admin/videos"
+                          style={{ color: "var(--primary)" }}
+                        >
+                          Add your first one →
+                        </a>
+                      </td>
+                    </tr>
+                  ) : (
+                    videos.slice(0, 5).map((video) => (
+                      <tr
+                        key={video._id}
+                        className="border-b transition-colors hover:opacity-80"
+                        style={{ borderColor: "var(--border)" }}
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={video.thumbnail}
+                              alt=""
+                              className="w-12 h-8 rounded-lg object-cover"
+                              style={{ border: "1px solid var(--border)" }}
+                            />
+                            <div>
+                              <p
+                                className="text-sm font-semibold line-clamp-1"
+                                style={{ fontFamily: "var(--font-display)" }}
+                              >
+                                {video.title}
+                              </p>
+                              <p
+                                className="text-xs"
+                                style={{ color: "var(--muted-foreground)" }}
+                              >
+                                {video.duration || "—"}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span
+                            className="text-xs px-2 py-1 rounded-lg font-medium"
+                            style={{
+                              background: "rgba(232,255,71,0.1)",
+                              color: "var(--primary)",
+                            }}
+                          >
+                            {video.category}
+                          </span>
+                        </td>
+                        <td
+                          className="px-6 py-4 text-sm"
+                          style={{ color: "var(--muted-foreground)" }}
+                        >
+                          {((video.views || 0) / 1000).toFixed(1)}k
+                        </td>
+                        <td
+                          className="px-6 py-4 text-sm"
+                          style={{ color: "var(--muted-foreground)" }}
+                        >
+                          {new Date(video.createdAt).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>

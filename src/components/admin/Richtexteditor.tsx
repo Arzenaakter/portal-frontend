@@ -8,97 +8,125 @@ interface RichTextEditorProps {
   placeholder?: string;
 }
 
-const RichTextEditor = forwardRef<{ getValue: () => string }, RichTextEditorProps>(
-  function RichTextEditor({ value = "", onChange, placeholder = "Write a detailed description..." }, ref) {
-    const editorRef = useRef<HTMLDivElement>(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+const RichTextEditor = forwardRef<
+  { getValue: () => string },
+  RichTextEditorProps
+>(function RichTextEditor(
+  { value = "", onChange, placeholder = "Write a detailed description..." },
+  ref,
+) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const quillRef = useRef<any>(null);
-    const mounted = useRef(false);
 
-    useImperativeHandle(ref, () => ({
-      getValue: () => {
-        if (quillRef.current) {
-          // @ts-ignore
-          return quillRef.current.root.innerHTML;
-        }
-        return "";
-      },
-    }));
+  useImperativeHandle(ref, () => ({
+    getValue: () => {
+      if (quillRef.current) {
+        return quillRef.current.root.innerHTML;
+      }
+      return "";
+    },
+  }));
 
-    useEffect(() => {
-      if (mounted.current || !editorRef.current) return;
-      mounted.current = true;
+  useEffect(() => {
+    if (!editorRef.current) return;
 
-      // Dynamically load Quill
-      const loadQuill = async () => {
-        const Quill = (await import("quill")).default;
+    // Use a local variable to capture the ref element for cleanup stability
+    const editorContainer = editorRef.current;
+    type QuillInstance = {
+      root: { innerHTML: string };
+      clipboard: { dangerouslyPasteHTML: (html: string) => void };
+      on: (event: string, handler: () => void) => void;
+    };
 
-        // Import Quill CSS
-        if (!document.getElementById("quill-css")) {
-          const link = document.createElement("link");
-          link.id = "quill-css";
-          link.rel = "stylesheet";
-          link.href = "https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css";
-          document.head.appendChild(link);
-        }
+    let quillInstance: QuillInstance | null = null;
 
-        if (!editorRef.current) return;
+    const loadQuill = async () => {
+      const Quill = (await import("quill")).default;
 
-        const quill = new Quill(editorRef.current, {
-          theme: "snow",
-          placeholder,
-          modules: {
-            toolbar: [
-              [{ header: [1, 2, 3, false] }],
-              ["bold", "italic", "underline", "strike"],
-              [{ list: "ordered" }, { list: "bullet" }],
-              ["blockquote", "code-block"],
-              ["link"],
-              ["clean"],
-            ],
-          },
-        });
+      // Import Quill CSS safely
+      if (!document.getElementById("quill-css")) {
+        const link = document.createElement("link");
+        link.id = "quill-css";
+        link.rel = "stylesheet";
+        link.href = "https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css";
+        document.head.appendChild(link);
+      }
 
-        // Set initial value
-        if (value) {
-          quill.clipboard.dangerouslyPasteHTML(value);
-        }
+      // Check if Quill has already been initialized on this element
+      if (editorContainer.classList.contains("ql-container")) return;
 
-        quill.on("text-change", () => {
-          onChange?.(quill.root.innerHTML);
-        });
+      quillInstance = new Quill(editorContainer, {
+        theme: "snow",
+        placeholder,
+        modules: {
+          toolbar: [
+            [{ header: [1, 2, 3, false] }],
+            ["bold", "italic", "underline", "strike"],
+            [{ list: "ordered" }, { list: "bullet" }],
+            ["blockquote", "code-block"],
+            ["link"],
+            ["clean"],
+          ],
+        },
+      });
 
-        quillRef.current = quill;
-      };
+      const currentQuill = quillInstance;
 
-      loadQuill().catch(console.error);
+      if (value) {
+        currentQuill.clipboard.dangerouslyPasteHTML(value);
+      }
 
-      return () => {
-        mounted.current = false;
-      };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+      currentQuill.on("text-change", () => {
+        onChange?.(currentQuill.root.innerHTML);
+      });
 
-    // Sync value from outside (for update form pre-fill)
-    useEffect(() => {
-      if (quillRef.current && value) {
-        // @ts-ignore
-        const currentContent = quillRef.current.root.innerHTML;
-        if (currentContent !== value && value !== "<p><br></p>") {
-          // @ts-ignore
-          quillRef.current.clipboard.dangerouslyPasteHTML(value);
+      quillRef.current = currentQuill;
+    };
+
+    loadQuill().catch(console.error);
+
+    // CLEANUP: Wipe out DOM changes when unmounting
+    return () => {
+      quillRef.current = null;
+      if (editorContainer) {
+        // Clear inner HTML to remove Quill's inner wrapper classes
+        editorContainer.innerHTML = "";
+        // Remove Quill layout classes added to the target div
+        editorContainer.className = "";
+      }
+      // Remove the toolbar element that Quill injected into the parent wrapper
+      if (containerRef.current) {
+        const toolbar = containerRef.current.querySelector(".ql-toolbar");
+        if (toolbar) {
+          toolbar.remove();
         }
       }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value]);
+  }, []);
 
-    return (
-      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border)" }}>
-        <div ref={editorRef} style={{ minHeight: 200 }} />
-      </div>
-    );
-  }
-);
+  // Sync value from outside
+  useEffect(() => {
+    if (quillRef.current && value) {
+      const currentContent = quillRef.current.root.innerHTML;
+      if (currentContent !== value && value !== "<p><br></p>") {
+        quillRef.current.clipboard.dangerouslyPasteHTML(value);
+      }
+    }
+  }, [value]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="rounded-xl overflow-hidden"
+      style={{ border: "1px solid var(--border)" }}
+    >
+      <div ref={editorRef} style={{ minHeight: 200 }} />
+    </div>
+  );
+});
 
 RichTextEditor.displayName = "RichTextEditor";
 export default RichTextEditor;

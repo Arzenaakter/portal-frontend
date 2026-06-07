@@ -123,7 +123,7 @@ export default function LatestVideosSection({
 
             <div className="flex flex-col gap-3">
               {latest.slice(1).map((video) => (
-                <VideoCard key={video.id} video={video} featured={false} />
+                <VideoCard key={video._id} video={video} featured={false} />
               ))}
             </div>
           </div>

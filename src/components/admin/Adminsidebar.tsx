@@ -37,29 +37,48 @@ const navItems = [
 //   { label: "Settings", icon: Settings, href: "/admin/settings" },
 // ];
 
+function getInitialUser() {
+  if (typeof window === "undefined") {
+    return {
+      name: "Admin",
+      email: "admin@learnhub.com",
+      initial: "A",
+    };
+  }
+
+  try {
+    const raw = localStorage.getItem("auth_user");
+    if (!raw) {
+      return {
+        name: "Admin",
+        email: "admin@learnhub.com",
+        initial: "A",
+      };
+    }
+
+    const parsed = JSON.parse(raw);
+    const name = parsed?.name ?? "Admin";
+    const email = parsed?.email ?? "admin@learnhub.com";
+    const initial = name?.[0]?.toUpperCase() ?? "A";
+
+    return { name, email, initial };
+  } catch {
+    return {
+      name: "Admin",
+      email: "admin@learnhub.com",
+      initial: "A",
+    };
+  }
+}
+
 export default function Adminsidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
-  const [userName, setUserName] = useState("Admin");
-  const [userEmail, setUserEmail] = useState("admin@learnhub.com");
-  const [userInitial, setUserInitial] = useState("A");
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem("auth_user");
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed?.name) {
-          setUserName(parsed.name);
-          setUserInitial(parsed.name[0].toUpperCase());
-        }
-        if (parsed?.email) setUserEmail(parsed.email);
-      }
-    } catch {
-      // ignore parse errors
-    }
-  }, []);
+  const initialUser = useState(() => getInitialUser())[0];
+  const [userName, setUserName] = useState(initialUser.name);
+  const [userEmail, setUserEmail] = useState(initialUser.email);
+  const [userInitial, setUserInitial] = useState(initialUser.initial);
 
   const handleLogout = async () => {
     await logoutApi();

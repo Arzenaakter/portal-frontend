@@ -1,5 +1,5 @@
 export interface Video {
-  id: string;
+  _id: string;
   title: string;
   thumbnail: string;
   caption: string;
@@ -13,14 +13,14 @@ export interface Video {
 }
 
 export interface Category {
-  id: string;
+  _id: string;
   name: string;
   subcategories: string[];
 }
 
 export const CATEGORIES: Category[] = [
   {
-    id: "web-dev",
+    _id: "web-dev",
     name: "Web Development",
     subcategories: [
       "HTML & CSS",
@@ -32,12 +32,12 @@ export const CATEGORIES: Category[] = [
     ],
   },
   {
-    id: "backend",
+    _id: "backend",
     name: "Backend Development",
     subcategories: ["Node.js", "Python", "Java", "Go", "Rust", "PHP"],
   },
   {
-    id: "mobile",
+    _id: "mobile",
     name: "Mobile Development",
     subcategories: [
       "React Native",
@@ -47,7 +47,7 @@ export const CATEGORIES: Category[] = [
     ],
   },
   {
-    id: "data-science",
+    _id: "data-science",
     name: "Data Science",
     subcategories: [
       "Python",
@@ -58,12 +58,12 @@ export const CATEGORIES: Category[] = [
     ],
   },
   {
-    id: "devops",
+    _id: "devops",
     name: "DevOps",
     subcategories: ["Docker", "Kubernetes", "CI/CD", "AWS", "Azure", "GCP"],
   },
   {
-    id: "design",
+    _id: "design",
     name: "UI/UX Design",
     subcategories: ["Figma", "Adobe XD", "Prototyping", "User Research"],
   },
@@ -71,7 +71,7 @@ export const CATEGORIES: Category[] = [
 
 export const MOCK_VIDEOS: Video[] = [
   {
-    id: "1",
+    _id: "1",
     title: "Mastering Next.js 15: Complete Guide",
     thumbnail:
       "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
@@ -86,7 +86,7 @@ export const MOCK_VIDEOS: Video[] = [
     duration: "4h 32m",
   },
   {
-    id: "2",
+    _id: "2",
     title: "React Hooks Deep Dive",
     thumbnail:
       "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80",
@@ -101,7 +101,7 @@ export const MOCK_VIDEOS: Video[] = [
     duration: "2h 15m",
   },
   {
-    id: "3",
+    _id: "3",
     title: "Python for Data Science Bootcamp",
     thumbnail:
       "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80",
@@ -116,7 +116,7 @@ export const MOCK_VIDEOS: Video[] = [
     duration: "8h 45m",
   },
   {
-    id: "4",
+    _id: "4",
     title: "Docker & Kubernetes Mastery",
     thumbnail:
       "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=800&q=80",
@@ -131,7 +131,7 @@ export const MOCK_VIDEOS: Video[] = [
     duration: "6h 20m",
   },
   {
-    id: "5",
+    _id: "5",
     title: "TypeScript Advanced Patterns",
     thumbnail:
       "https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=800&q=80",
@@ -146,7 +146,7 @@ export const MOCK_VIDEOS: Video[] = [
     duration: "3h 10m",
   },
   {
-    id: "6",
+    _id: "6",
     title: "Figma UI Design Masterclass",
     thumbnail:
       "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80",
@@ -161,7 +161,7 @@ export const MOCK_VIDEOS: Video[] = [
     duration: "5h 30m",
   },
   {
-    id: "7",
+    _id: "7",
     title: "Flutter Mobile Development",
     thumbnail:
       "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80",
@@ -176,7 +176,7 @@ export const MOCK_VIDEOS: Video[] = [
     duration: "7h 15m",
   },
   {
-    id: "8",
+    _id: "8",
     title: "Node.js API Development",
     thumbnail:
       "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
