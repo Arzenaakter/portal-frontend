@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Video,
@@ -12,15 +12,17 @@ import {
   MessageSquare,
   Bell,
   ChevronLeft,
+  ChevronRight,
   Zap,
   LogOut,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { logoutApi } from "@/lib/auth";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin", badge: null },
   { label: "Videos", icon: Video, href: "/admin/videos", badge: "8" },
-  { label: "Categories", icon: Tag, href: "/admin/categories", badge: null },
+
   { label: "Users", icon: Users, href: "/admin/users", badge: null },
   {
     label: "Analytics",
@@ -28,101 +30,190 @@ const navItems = [
     href: "/admin/analytics",
     badge: null,
   },
-  {
-    label: "Comments",
-    icon: MessageSquare,
-    href: "/admin/comments",
-    badge: "3",
-  },
 ];
 
-const bottomItems = [
-  { label: "Notifications", icon: Bell, href: "/admin/notifications" },
-  { label: "Settings", icon: Settings, href: "/admin/settings" },
-];
+// const bottomItems = [
+//   { label: "Notifications", icon: Bell, href: "/admin/notifications" },
+//   { label: "Settings", icon: Settings, href: "/admin/settings" },
+// ];
 
 export default function Adminsidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
+  const [userName, setUserName] = useState("Admin");
+  const [userEmail, setUserEmail] = useState("admin@learnhub.com");
+  const [userInitial, setUserInitial] = useState("A");
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("auth_user");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.name) {
+          setUserName(parsed.name);
+          setUserInitial(parsed.name[0].toUpperCase());
+        }
+        if (parsed?.email) setUserEmail(parsed.email);
+      }
+    } catch {
+      // ignore parse errors
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    await logoutApi();
+    router.push("/login");
+  };
+
+  const width = collapsed ? 64 : 240;
 
   return (
     <aside
-      className="flex flex-col h-screen sticky top-0 transition-all duration-300"
       style={{
-        width: collapsed ? 64 : 240,
+        width,
+        minWidth: width,
+        maxWidth: width,
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        flexShrink: 0,
         background: "var(--card)",
         borderRight: "1px solid var(--border)",
-        flexShrink: 0,
+        transition: "width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease",
+        overflow: "hidden",
+        position: "sticky",
+        top: 0,
       }}
     >
-      {/* Logo */}
+      {/* ── Logo row ── */}
       <div
-        className="flex items-center justify-between px-4 h-16 border-b flex-shrink-0"
-        style={{ borderColor: "var(--border)" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 16px",
+          height: 64,
+          borderBottom: "1px solid var(--border)",
+          flexShrink: 0,
+        }}
       >
-        {!collapsed && (
-          <Link href="/" className="flex items-center gap-2">
-            <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center"
-              style={{ background: "var(--primary)" }}
+        {!collapsed ? (
+          <>
+            <Link
+              href="/"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                textDecoration: "none",
+              }}
             >
-              <Zap size={14} fill="black" style={{ color: "black" }} />
-            </div>
-            <span
-              className="font-bold text-sm"
-              style={{ fontFamily: "var(--font-display)" }}
+              <div
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 8,
+                  background: "var(--primary)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <Zap size={14} fill="black" color="black" />
+              </div>
+              <span
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  fontSize: 14,
+                  color: "var(--foreground)",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Learn<span style={{ color: "var(--primary)" }}>Hub</span>
+              </span>
+            </Link>
+            <button
+              onClick={() => setCollapsed(true)}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 4,
+                color: "var(--muted-foreground)",
+                display: "flex",
+              }}
             >
-              Learn<span style={{ color: "var(--primary)" }}>Hub</span>
-            </span>
-          </Link>
-        )}
-        {collapsed && (
-          <div
-            className="w-7 h-7 rounded-lg flex items-center justify-center mx-auto"
-            style={{ background: "var(--primary)" }}
-          >
-            <Zap size={14} fill="black" style={{ color: "black" }} />
-          </div>
-        )}
-        {!collapsed && (
+              <ChevronLeft size={16} />
+            </button>
+          </>
+        ) : (
           <button
-            onClick={() => setCollapsed(true)}
-            className="p-1 rounded-lg transition-colors hover:opacity-70"
-            style={{ color: "var(--muted-foreground)" }}
+            onClick={() => setCollapsed(false)}
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 8,
+              background: "var(--primary)",
+              border: "none",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto",
+            }}
           >
-            <ChevronLeft size={16} />
+            <Zap size={14} fill="black" color="black" />
           </button>
         )}
       </div>
 
+      {/* Expand button when collapsed */}
       {collapsed && (
         <button
           onClick={() => setCollapsed(false)}
-          className="mt-2 mx-2 p-2 rounded-xl flex items-center justify-center transition-colors hover:opacity-70"
           style={{
-            color: "var(--muted-foreground)",
+            margin: "12px auto 0",
+            width: 32,
+            height: 32,
+            borderRadius: 10,
             border: "1px solid var(--border)",
+            background: "none",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "var(--muted-foreground)",
           }}
         >
-          <ChevronLeft size={14} style={{ transform: "rotate(180deg)" }} />
+          <ChevronRight size={14} />
         </button>
       )}
 
-      {/* Nav label */}
+      {/* Section label */}
       {!collapsed && (
-        <div className="px-4 pt-5 pb-2">
+        <div style={{ padding: "20px 16px 8px" }}>
           <p
-            className="text-xs font-semibold uppercase tracking-widest"
-            style={{ color: "#3a3d45", fontFamily: "var(--font-display)" }}
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              color: "#3a3d45",
+              fontFamily: "var(--font-display)",
+              margin: 0,
+            }}
           >
             Menu
           </p>
         </div>
       )}
 
-      {/* Main nav */}
-      <nav className="flex-1 overflow-y-auto px-2 pb-2">
-        <div className="flex flex-col gap-1">
+      {/* ── Main nav ── */}
+      <nav style={{ flex: 1, overflowY: "auto", padding: "4px 8px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           {navItems.map(({ label, icon: Icon, href, badge }) => {
             const isActive =
               pathname === href ||
@@ -131,8 +222,15 @@ export default function Adminsidebar() {
               <Link
                 key={href}
                 href={href}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group relative"
+                title={collapsed ? label : undefined}
                 style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "10px 12px",
+                  borderRadius: 12,
+                  textDecoration: "none",
+                  position: "relative",
                   background: isActive ? "rgba(232,255,71,0.1)" : "transparent",
                   color: isActive
                     ? "var(--primary)"
@@ -140,22 +238,30 @@ export default function Adminsidebar() {
                   border: isActive
                     ? "1px solid rgba(232,255,71,0.15)"
                     : "1px solid transparent",
+                  transition: "opacity 0.15s",
                 }}
-                title={collapsed ? label : undefined}
               >
-                <Icon size={17} className="flex-shrink-0" />
+                <Icon size={17} style={{ flexShrink: 0 }} />
                 {!collapsed && (
                   <>
                     <span
-                      className="text-sm font-medium flex-1"
-                      style={{ fontFamily: "var(--font-body)" }}
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 500,
+                        flex: 1,
+                        whiteSpace: "nowrap",
+                        fontFamily: "var(--font-body)",
+                      }}
                     >
                       {label}
                     </span>
                     {badge && (
                       <span
-                        className="text-xs font-bold px-2 py-0.5 rounded-full"
                         style={{
+                          fontSize: 11,
+                          fontWeight: 700,
+                          padding: "2px 8px",
+                          borderRadius: 999,
                           background: "rgba(232,255,71,0.15)",
                           color: "var(--primary)",
                         }}
@@ -167,8 +273,20 @@ export default function Adminsidebar() {
                 )}
                 {collapsed && badge && (
                   <span
-                    className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-xs flex items-center justify-center"
-                    style={{ background: "var(--primary)", color: "black" }}
+                    style={{
+                      position: "absolute",
+                      top: -4,
+                      right: -4,
+                      width: 16,
+                      height: 16,
+                      borderRadius: 999,
+                      fontSize: 10,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: "var(--primary)",
+                      color: "black",
+                    }}
                   >
                     {badge}
                   </span>
@@ -180,48 +298,107 @@ export default function Adminsidebar() {
       </nav>
 
       {/* Divider */}
-      <div className="mx-3 my-2 h-px" style={{ background: "var(--border)" }} />
+      <div
+        style={{ height: 1, background: "var(--border)", margin: "4px 12px" }}
+      />
 
-      {/* Bottom nav */}
-      <div className="px-2 pb-3 flex flex-col gap-1">
-        {bottomItems.map(({ label, icon: Icon, href }) => (
+      {/* ── Bottom nav ── */}
+      <div
+        style={{
+          padding: "4px 8px 12px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
+        {/* {bottomItems.map(({ label, icon: Icon, href }) => (
           <Link
             key={href}
             href={href}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:opacity-80"
-            style={{ color: "var(--muted-foreground)" }}
             title={collapsed ? label : undefined}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: "10px 12px",
+              borderRadius: 12,
+              textDecoration: "none",
+              color: "var(--muted-foreground)",
+            }}
           >
-            <Icon size={17} className="flex-shrink-0" />
-            {!collapsed && <span className="text-sm font-medium">{label}</span>}
+            <Icon size={17} style={{ flexShrink: 0 }} />
+            {!collapsed && (
+              <span
+                style={{ fontSize: 14, fontWeight: 500, whiteSpace: "nowrap" }}
+              >
+                {label}
+              </span>
+            )}
           </Link>
-        ))}
+        ))} */}
 
-        {/* User */}
-        <div
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer hover:opacity-80 transition-opacity mt-1"
-          style={{ border: "1px solid var(--border)" }}
+        {/* User row / Logout */}
+        <button
+          onClick={handleLogout}
+          title={collapsed ? "Logout" : undefined}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "10px 12px",
+            borderRadius: 12,
+            marginTop: 4,
+            border: "1px solid var(--border)",
+            background: "none",
+            cursor: "pointer",
+            width: "100%",
+            textAlign: "left",
+          }}
         >
           <div
-            className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
-            style={{ background: "var(--primary)", color: "black" }}
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 999,
+              background: "var(--primary)",
+              color: "black",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 12,
+              fontWeight: 700,
+              flexShrink: 0,
+            }}
           >
-            A
+            {userInitial}
           </div>
           {!collapsed && (
             <>
-              <div className="flex-1 min-w-0">
+              <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
                 <p
-                  className="text-xs font-semibold truncate"
-                  style={{ color: "var(--foreground)" }}
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    margin: 0,
+                    color: "var(--foreground)",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
                 >
-                  Admin
+                  {userName}
                 </p>
                 <p
-                  className="text-xs truncate"
-                  style={{ color: "var(--muted-foreground)" }}
+                  style={{
+                    fontSize: 11,
+                    margin: 0,
+                    color: "var(--muted-foreground)",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
                 >
-                  admin@learnhub.com
+                  {userEmail}
                 </p>
               </div>
               <LogOut
@@ -230,7 +407,7 @@ export default function Adminsidebar() {
               />
             </>
           )}
-        </div>
+        </button>
       </div>
     </aside>
   );

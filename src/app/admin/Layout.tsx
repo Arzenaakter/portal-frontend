@@ -1,4 +1,6 @@
-import AdminSidebar from "@/components/admin/Adminsidebar";
+"use client";
+
+import Adminsidebar from "@/components/admin/Adminsidebar";
 
 export default function AdminLayout({
   children,
@@ -7,11 +9,27 @@ export default function AdminLayout({
 }) {
   return (
     <div
-      className="flex h-screen overflow-hidden"
-      style={{ background: "var(--background)" }}
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        height: "100vh",
+        width: "100%",
+        // overflow: "hidden",
+        background: "var(--background)",
+      }}
     >
-      <AdminSidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">{children}</div>
+      <Adminsidebar />
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          // overflow: "hidden",
+          minWidth: 0,
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }
