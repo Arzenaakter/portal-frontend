@@ -82,8 +82,6 @@ export default function Videoform({
 
   const watchCategory = watch("category");
 
-  console.log("initialData:", initialData);
-
   useEffect(() => {
     const cat = CATEGORIES.find((c) => c.name === watchCategory);
     setAvailableSubs(cat?.subcategories || []);

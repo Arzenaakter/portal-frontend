@@ -79,7 +79,7 @@ export const loginApi = async (
     "/auth/login",
     credentials,
   );
-  console.log("Login response:", response.data);
+
   return response.data;
 };
 
@@ -115,6 +115,6 @@ export const registerApi = async (
     "/auth/register",
     credentials,
   );
-  console.log("Register response:", response.data);
+
   return response.data;
 };

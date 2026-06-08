@@ -44,7 +44,7 @@ export default function AdminVideosPage() {
     setFetchError(null);
     try {
       const data = await getVideosApi();
-      console.log("Fetched videos:", data);
+    
       // Support both { data: [] } and plain [] responses
       setVideos(Array.isArray(data) ? data : (data.data ?? []));
     } catch (err: unknown) {
