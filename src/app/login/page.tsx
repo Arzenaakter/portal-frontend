@@ -188,8 +188,8 @@ export default function LoginPage() {
             className="text-sm leading-relaxed mb-3"
             style={{ color: "var(--muted-foreground)" }}
           >
-            &quot;LearnHub transformed how we deliver technical education. The admin
-            tools are intuitive and powerful.&quot;
+            &quot;LearnHub transformed how we deliver technical education. The
+            admin tools are intuitive and powerful.&quot;
           </p>
           <div className="flex items-center gap-3">
             <div
@@ -203,7 +203,7 @@ export default function LoginPage() {
                 className="text-xs font-semibold"
                 style={{ color: "var(--foreground)" }}
               >
-                Yasir Ahmed
+                Arzena Akter
               </p>
               <p
                 className="text-xs"

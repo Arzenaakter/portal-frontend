@@ -23,7 +23,7 @@ export default function RootLayout({
       </head>
       <body>
         <div
-          className="min-h-screen"
+          className="min-h-screen py-20"
           style={{ background: "var(--background)" }}
         >
           <Navbar />

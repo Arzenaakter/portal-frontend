@@ -78,7 +78,7 @@ export const MOCK_VIDEOS: Video[] = [
     caption: "Build production-ready apps with the latest Next.js features",
     description:
       "<p>In this comprehensive course, we'll explore everything Next.js 15 has to offer, from server components to the new app router. You'll learn how to build scalable, performant web applications.</p>",
-    videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    videoUrl: "https://www.youtube.com/watch?v=W6NZfCO5SIk",
     category: "Web Development",
     subcategory: "Next.js",
     createdAt: "2024-01-15",
@@ -93,7 +93,7 @@ export const MOCK_VIDEOS: Video[] = [
     caption: "Master useState, useEffect, useContext and custom hooks",
     description:
       "<p>Deep dive into React hooks with real-world examples and best practices. Learn how to write cleaner, more maintainable React code.</p>",
-    videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    videoUrl: "https://www.youtube.com/watch?v=W6NZfCO5SIk",
     category: "Web Development",
     subcategory: "React",
     createdAt: "2024-01-20",
@@ -108,7 +108,7 @@ export const MOCK_VIDEOS: Video[] = [
     caption: "From zero to data scientist with Python",
     description:
       "<p>Complete Python for Data Science course covering pandas, numpy, matplotlib, and machine learning fundamentals.</p>",
-    videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    videoUrl: "https://www.youtube.com/watch?v=W6NZfCO5SIk",
     category: "Data Science",
     subcategory: "Python",
     createdAt: "2024-02-01",
@@ -123,7 +123,7 @@ export const MOCK_VIDEOS: Video[] = [
     caption: "Container orchestration for modern applications",
     description:
       "<p>Learn how to containerize applications with Docker and manage them at scale with Kubernetes.</p>",
-    videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    videoUrl: "https://www.youtube.com/watch?v=W6NZfCO5SIk",
     category: "DevOps",
     subcategory: "Docker",
     createdAt: "2024-02-10",
@@ -138,7 +138,7 @@ export const MOCK_VIDEOS: Video[] = [
     caption: "Level up your TypeScript skills with advanced type patterns",
     description:
       "<p>Explore advanced TypeScript patterns including generics, conditional types, mapped types, and more.</p>",
-    videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    videoUrl: "https://www.youtube.com/watch?v=W6NZfCO5SIk",
     category: "Web Development",
     subcategory: "JavaScript",
     createdAt: "2024-02-18",
@@ -153,7 +153,7 @@ export const MOCK_VIDEOS: Video[] = [
     caption: "Design stunning interfaces from scratch",
     description:
       "<p>Complete guide to Figma for UI/UX designers. Learn components, auto-layout, prototyping and handoff workflows.</p>",
-    videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    videoUrl: "https://www.youtube.com/watch?v=W6NZfCO5SIk",
     category: "UI/UX Design",
     subcategory: "Figma",
     createdAt: "2024-03-01",
@@ -168,7 +168,7 @@ export const MOCK_VIDEOS: Video[] = [
     caption: "Build beautiful cross-platform mobile apps",
     description:
       "<p>Complete Flutter development course. Build iOS and Android apps from a single codebase with beautiful Material Design.</p>",
-    videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    videoUrl: "https://www.youtube.com/watch?v=W6NZfCO5SIk",
     category: "Mobile Development",
     subcategory: "Flutter",
     createdAt: "2024-03-10",
@@ -183,7 +183,7 @@ export const MOCK_VIDEOS: Video[] = [
     caption: "Build scalable REST APIs with Node.js and Express",
     description:
       "<p>Learn to build production-ready REST APIs with Node.js, Express, MongoDB and JWT authentication.</p>",
-    videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    videoUrl: "https://www.youtube.com/watch?v=W6NZfCO5SIk",
     category: "Backend Development",
     subcategory: "Node.js",
     createdAt: "2024-03-15",
