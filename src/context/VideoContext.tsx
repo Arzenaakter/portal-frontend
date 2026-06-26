@@ -1,32 +1,17 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
-// import { api } from "@/services/api";
+import { createContext, useContext, useState } from "react";
 
 type Video = unknown;
 
 type VideoContextType = {
   videos: Video[];
-  // fetchVideos: () => Promise<void>;
 };
 
 const VideoContext = createContext<VideoContextType | null>(null);
 
 export const VideoProvider = ({ children }: { children: React.ReactNode }) => {
   const [videos, setVideos] = useState<Video[]>([]);
-
-  // const fetchVideos = async () => {
-  //   const res = await api.get("/api/videos?populate=*");
-  //   setVideos(res.data.data);
-  // };
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     void fetchVideos();
-  //   }, 0);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
 
   return (
     <VideoContext.Provider value={{ videos }}>{children}</VideoContext.Provider>

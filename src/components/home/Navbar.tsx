@@ -8,6 +8,13 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "Courses", href: "/courses" },
+    { label: "Categories", href: "#" },
+    { label: "Instructors", href: "#" },
+  ];
+
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b"
@@ -40,17 +47,17 @@ export default function Navbar() {
 
           {/* Nav links */}
           <nav className="hidden md:flex items-center gap-8">
-            {["Courses", "Categories", "Instructors", "Pricing"].map((item) => (
+            {navLinks.map((item, i) => (
               <Link
-                key={item}
-                href="#"
+                key={i}
+                href={item.href}
                 className="text-sm font-medium transition-colors hover:opacity-100"
                 style={{
                   color: "var(--muted-foreground)",
                   fontFamily: "var(--font-body)",
                 }}
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </nav>

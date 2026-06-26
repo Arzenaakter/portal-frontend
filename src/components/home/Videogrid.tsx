@@ -5,6 +5,7 @@ import { Video } from "@/types";
 import VideoCard from "./Videocard";
 import CategoryFilter from "./Categoryfilter";
 import { Layers } from "lucide-react";
+import Link from "next/link";
 
 interface VideoGridProps {
   videos: Video[];
@@ -50,7 +51,8 @@ export default function Videogrid({
               {title}
             </h2>
           </div>
-          <button
+          <Link
+            href="/courses"
             className="text-xs font-semibold transition-colors hover:opacity-80"
             style={{
               color: "var(--primary)",
@@ -58,7 +60,7 @@ export default function Videogrid({
             }}
           >
             View All →
-          </button>
+          </Link>
         </div>
 
         {showFilter && (

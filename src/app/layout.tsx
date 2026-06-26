@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Navbar from "@/components/home/Navbar";
 
 export const metadata: Metadata = {
   title: "LearnHub — Master Modern Tech",
@@ -20,7 +21,15 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <div
+          className="min-h-screen"
+          style={{ background: "var(--background)" }}
+        >
+          <Navbar />
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

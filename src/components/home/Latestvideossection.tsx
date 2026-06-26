@@ -54,7 +54,7 @@ export default function LatestVideosSection({
                     alt={latest[0].title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
 
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <div
@@ -92,7 +92,9 @@ export default function LatestVideosSection({
                       <span>{latest[0].duration}</span>
                       <span>·</span>
                       <span>
-                      {new Date(latest[0].createdAt).toLocaleDateString("en-GB")}
+                        {new Date(latest[0].createdAt).toLocaleDateString(
+                          "en-GB",
+                        )}
                       </span>
                     </div>
                   </div>
