@@ -24,7 +24,7 @@ export interface AuthError {
 
 // Axios instance
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "https://portal-backend-baay.onrender.com/api",
   headers: { "Content-Type": "application/json" },
 });
 
