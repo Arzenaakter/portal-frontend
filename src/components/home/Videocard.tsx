@@ -10,13 +10,13 @@ interface VideoCardProps {
   featured?: boolean;
 }
 
-export default function Videocard({ video, featured = false }: VideoCardProps) {
-  const formatViews = (views?: number) => {
-    if (!views) return "0";
-    if (views >= 1000) return `${(views / 1000).toFixed(1)}k`;
-    return views.toString();
-  };
+export const formatViews = (views?: number) => {
+  if (!views) return "0";
+  if (views >= 1000) return `${(views / 1000).toFixed(1)}k`;
+  return views.toString();
+};
 
+export default function Videocard({ video, featured = false }: VideoCardProps) {
   if (featured) {
     return (
       <Link href={`/courses/${video._id}`}>
@@ -122,7 +122,7 @@ export default function Videocard({ video, featured = false }: VideoCardProps) {
         className="flex gap-3 group cursor-pointer p-3 rounded-xl transition-all hover:opacity-90"
         style={{ background: "var(--card)", border: "1px solid var(--border)" }}
       >
-        <div className="relative w-28 h-16 rounded-lg overflow-hidden flex-shrink-0">
+        <div className="relative w-28 h-16 rounded-lg overflow-hidden shrink-0">
           <Image
             src={video.thumbnail}
             alt={video.title}
