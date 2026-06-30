@@ -3,6 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Search, Menu, X, Zap } from "lucide-react";
+import Container from "./Container";
+import Logo from "./Logo";
+import { Button } from "../ui/button";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,39 +15,14 @@ export default function Navbar() {
     { label: "Home", href: "/" },
     { label: "Courses", href: "/courses" },
     { label: "Categories", href: "#" },
-    { label: "Instructors", href: "#" },
   ];
 
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b"
-      style={{ background: "rgba(8,9,10,0.85)", borderColor: "#1e2026" }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b border-[#1e2026] bg-[rgba(8,9,10,0.85)]">
+      <Container>
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-110"
-              style={{ background: "var(--primary)" }}
-            >
-              <Zap
-                size={16}
-                style={{ color: "var(--background)" }}
-                fill="currentColor"
-              />
-            </div>
-            <span
-              className="text-lg font-bold"
-              style={{
-                fontFamily: "var(--font-display)",
-                color: "var(--foreground)",
-              }}
-            >
-              Learn<span style={{ color: "var(--primary)" }}>Hub</span>
-            </span>
-          </Link>
-
+          <Logo />
           {/* Nav links */}
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((item, i) => (
@@ -88,64 +66,46 @@ export default function Navbar() {
                 />
               </div>
             ) : (
-              <button
+              <Button
                 onClick={() => setSearchOpen(true)}
-                className="p-2 rounded-lg transition-colors hover:opacity-80"
-                style={{ color: "var(--muted-foreground)" }}
+                className="p-2 rounded-lg transition-colors hover:opacity-80 text-(--muted-foreground)"
               >
                 <Search size={18} />
-              </button>
+              </Button>
             )}
 
             <Link
               href="/admin"
-              className="hidden md:flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:opacity-90 active:scale-95"
-              style={{
-                background: "var(--primary)",
-                color: "var(--primary-foreground)",
-                fontFamily: "var(--font-display)",
-              }}
+              className="hidden md:flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:opacity-90 active:scale-95 bg-(--primary) text-(--primary-foreground)  font-sans"
             >
               Admin
             </Link>
 
-            <button
+            <Button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2"
-              style={{ color: "var(--muted-foreground)" }}
+              className="md:hidden p-2 text-(--muted-foreground)"
             >
               {menuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+            </Button>
           </div>
         </div>
-      </div>
+      </Container>
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div
-          className="md:hidden border-t px-4 pb-4 pt-2"
-          style={{ background: "rgba(8,9,10,0.98)", borderColor: "#1e2026" }}
-        >
-          {["Courses", "Categories", "Instructors", "Pricing"].map((item) => (
+        <div className="md:hidden border-t px-4 pb-4 pt-2 border-[#1e2026] bg-[rgba(8,9,10,0.98)]">
+          {navLinks.map((item, index) => (
             <Link
-              key={item}
-              href="#"
-              className="block py-3 text-sm border-b"
-              style={{
-                color: "var(--muted-foreground)",
-                borderColor: "#1e2026",
-              }}
+              key={index}
+              href={item.href}
+              className="block py-3 text-sm border-b border-[#1e2026] text-(--muted-foreground) "
             >
-              {item}
+              {item.label}
             </Link>
           ))}
           <Link
             href="/admin"
-            className="mt-3 flex items-center justify-center text-sm font-semibold px-4 py-2 rounded-xl"
-            style={{
-              background: "var(--primary)",
-              color: "var(--primary-foreground)",
-            }}
+            className="mt-3 flex items-center justify-center text-sm font-semibold px-4 py-2 rounded-xl bg-(--primary) text-(--primary-foreground)"
           >
             Admin Dashboard
           </Link>

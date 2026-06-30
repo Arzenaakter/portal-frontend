@@ -1,6 +1,19 @@
 import type { Metadata } from "next";
+import { DM_Sans, Syne } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/home/Navbar";
+
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "LearnHub — Master Modern Tech",
@@ -15,21 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>
-        <div
-          className="min-h-screen py-20"
-          style={{ background: "var(--background)" }}
-        >
-          <Navbar />
-          {children}
-        </div>
-      </body>
+      <body className={`${syne.className} ${dmSans.className}`}>{children}</body>
     </html>
   );
 }

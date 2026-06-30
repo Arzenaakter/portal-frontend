@@ -1,10 +1,11 @@
+import Container from "@/components/common/Container";
 import Videocard from "@/components/home/Videocard";
 import { MOCK_VIDEOS } from "@/types";
 
 const page = () => {
   return (
-    <section className="py-28 px-4 ">
-      <div className="max-w-7xl mx-auto">
+    <section className="pt-10  ">
+      <Container>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {MOCK_VIDEOS.map((video, i) => (
             <div
@@ -19,7 +20,7 @@ const page = () => {
             </div>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 };

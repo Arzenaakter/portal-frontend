@@ -6,6 +6,7 @@ import VideoCard from "./Videocard";
 import CategoryFilter from "./Categoryfilter";
 import { Layers } from "lucide-react";
 import Link from "next/link";
+import Container from "../common/Container";
 
 interface VideoGridProps {
   videos: Video[];
@@ -32,32 +33,19 @@ export default function Videogrid({
 
   return (
     <section className="py-12 px-4">
-      <div className="max-w-7xl mx-auto">
+      <Container>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ background: "rgba(232,255,71,0.1)" }}
-            >
-              <Layers size={16} style={{ color: "var(--primary)" }} />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+              <Layers size={16} className="text-(--primary)" />
             </div>
-            <h2
-              className="text-2xl font-bold"
-              style={{
-                fontFamily: "var(--font-display)",
-                color: "var(--foreground)",
-              }}
-            >
+            <h2 className="text-2xl font-bold font-display text-(--foreground)">
               {title}
             </h2>
           </div>
           <Link
             href="/courses"
-            className="text-xs font-semibold transition-colors hover:opacity-80"
-            style={{
-              color: "var(--primary)",
-              fontFamily: "var(--font-display)",
-            }}
+            className="text-xs font-semibold transition-colors hover:opacity-80 text-(--primary) font-display"
           >
             View All →
           </Link>
@@ -71,7 +59,7 @@ export default function Videogrid({
 
         {filtered.length === 0 ? (
           <div className="text-center py-16">
-            <p style={{ color: "var(--muted-foreground)" }}>
+            <p className="text-(--muted-foreground)">
               No videos in this category yet.
             </p>
           </div>
@@ -91,7 +79,7 @@ export default function Videogrid({
             ))}
           </div>
         )}
-      </div>
+      </Container>
     </section>
   );
 }

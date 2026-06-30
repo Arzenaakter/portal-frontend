@@ -1,3 +1,4 @@
+import Container from "@/components/common/Container";
 import { MOCK_VIDEOS } from "@/types";
 import { CalendarDays, Clock3, Eye, Tag } from "lucide-react";
 import Image from "next/image";
@@ -17,14 +18,14 @@ const CourseDetailsPage = async ({ params }: Props) => {
   }
 
   return (
-    <>
-      <div className="min-h-screen max-w-7xl mx-auto  px-4 text-(--foreground) ">
+    <Container>
+      <div className="  px-4 text-(--foreground) ">
         {/* Hero */}
         <div className="relative overflow-hidden ">
-          <div className="max-w-7xl mx-auto px-6 py-20 relative grid lg:grid-cols-2 gap-12 items-center">
+          <div className="  py-10 relative grid lg:grid-cols-2 gap-12 items-center">
             {/* Left */}
             <div>
-              <span className="inline-block rounded-full bg-cyan-500/20 text-primary-foreground px-4 py-1 text-sm">
+              <span className="inline-block rounded-full bg-(--primary)/10 text-(--primary) px-4 py-1 text-sm">
                 {course.category}
               </span>
 
@@ -32,9 +33,11 @@ const CourseDetailsPage = async ({ params }: Props) => {
                 {course.title}
               </h1>
 
-              <p className="text-slate-400 mt-5 text-lg">{course.caption}</p>
+              <p className="text-(--muted-foreground) mt-5 text-lg">
+                {course.caption}
+              </p>
 
-              <div className="flex flex-wrap gap-6 mt-8 text-slate-300">
+              <div className="flex flex-wrap gap-6 mt-8 text-(--muted-foreground)">
                 <div className="flex items-center gap-2">
                   <Clock3 className="w-5 h-5 text-cyan-400" />
                   {course.duration}
@@ -77,7 +80,7 @@ const CourseDetailsPage = async ({ params }: Props) => {
           <h2 className="text-3xl font-bold mb-8">About this Course</h2>
 
           <div
-            className="prose prose-invert max-w-none prose-p:text-slate-300"
+            className="prose prose-invert max-w-none prose-p:text-(--muted-foreground)"
             dangerouslySetInnerHTML={{
               __html: course.description,
             }}
@@ -97,7 +100,7 @@ const CourseDetailsPage = async ({ params }: Props) => {
           </div>
         </div>
       </div>
-    </>
+    </Container>
   );
 };
 
