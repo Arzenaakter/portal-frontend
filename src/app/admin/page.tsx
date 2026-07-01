@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import AdminHeader from "@/components/admin/Adminheader";
-import { Video } from "@/types";
-import { getVideosApi } from "@/lib/videoApi";
+import { useEffect } from "react";
+
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+
+import { getCourses } from "@/features/course/courseSlice";
+
 import {
   Video as VideoIcon,
   Users,
@@ -14,31 +17,29 @@ import {
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+
+  const { courses, fetchLoading } = useAppSelector((state) => state.course);
 
   useEffect(() => {
-    getVideosApi()
-      .then((data) => setVideos(Array.isArray(data) ? data : (data.data ?? [])))
-      .catch(() => setVideos([]))
-      .finally(() => setLoading(false));
-  }, []);
+    dispatch(getCourses());
+  }, [dispatch]);
 
-  const totalViews = videos.reduce((sum, v) => sum + (v.views || 0), 0);
+  const totalCourses = courses.length;
 
   const stats = [
     {
-      label: "Total Videos",
-      value: loading ? "—" : videos.length,
+      label: "Total Courses",
+      value: fetchLoading ? "—" : totalCourses,
       icon: VideoIcon,
       change: "+3 this week",
       color: "#e8ff47",
     },
     {
-      label: "Total Views",
-      value: loading ? "—" : `${(totalViews / 1000).toFixed(1)}k`,
+      label: "Categories",
+      value: [...new Set(courses.map((course) => course.category))].length,
       icon: Eye,
-      change: "+12% this month",
+      change: "Available",
       color: "#47e8ff",
     },
     {
@@ -93,23 +94,23 @@ export default function AdminDashboardPage() {
           ))}
         </div>
 
-        {/* Recent videos */}
+        {/* Recent Courses */}
         <div className="rounded-2xl overflow-hidden border bg-(--card) border-(--border)">
           <div className="flex items-center justify-between px-6 py-4 border-b border-(--border)">
-            <h2 className="font-bold font-display">Recent Videos</h2>
+            <h2 className="font-bold font-display">Recent Courses</h2>
             <a
-              href="/admin/videos"
+              href="/admin/courses"
               className="text-xs font-semibold text-(--primary)"
             >
               Manage all →
             </a>
           </div>
 
-          {loading ? (
+          {fetchLoading ? (
             <div className="flex items-center justify-center py-16 gap-3">
               <Loader2 size={20} className="animate-spin text-(--primary)" />
               <span className="text-sm text-(--muted-foreground)">
-                Loading videos...
+                Loading courses...
               </span>
             </div>
           ) : (
@@ -128,52 +129,54 @@ export default function AdminDashboardPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {videos.length === 0 ? (
+                  {courses.length === 0 ? (
                     <tr>
                       <td
                         colSpan={4}
                         className="text-center py-12 text-sm text-(--muted-foreground)"
                       >
-                        No videos yet.{" "}
-                        <a href="/admin/videos" className="text-(--primary)">
+                        No courses yet.{" "}
+                        <a href="/admin/courses" className="text-(--primary)">
                           Add your first one →
                         </a>
                       </td>
                     </tr>
                   ) : (
-                    videos.slice(0, 5).map((video) => (
+                    courses.slice(0, 5).map((course) => (
                       <tr
-                        key={video._id}
+                        key={course._id}
                         className="border-b transition-colors hover:opacity-80 border-(--border)"
                       >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                              src={video.thumbnail}
+                              src={course.thumbnail}
                               alt=""
                               className="w-12 h-8 rounded-lg object-cover border border-(--border)"
                             />
                             <div>
                               <p className="text-sm font-semibold line-clamp-1 font-display">
-                                {video.title}
+                                {course.title}
                               </p>
                               <p className="text-xs text-(--muted-foreground) ">
-                                {video.duration || "—"}
+                                {course.subcategory || "—"}
                               </p>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4">
                           <span className="text-xs px-2 py-1 rounded-lg font-medium bg-[rgba(232,255,71,0.1)] text-(--primary)">
-                            {video.category}
+                            {course.category}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-sm text-(--muted-foreground)">
-                          {((video.views || 0) / 1000).toFixed(1)}k
+                          {course.caption}
                         </td>
                         <td className="px-6 py-4 text-sm text-(--muted-foreground)">
-                          {new Date(video.createdAt).toLocaleDateString()}
+                          {course.createdAt
+                            ? new Date(course.createdAt).toLocaleDateString()
+                            : "—"}
                         </td>
                       </tr>
                     ))

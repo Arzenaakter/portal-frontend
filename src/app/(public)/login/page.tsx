@@ -14,8 +14,8 @@ import {
   ArrowRight,
   Loader2,
 } from "lucide-react";
-import { loginApi, setToken, setUser, isAuthenticated } from "@/lib/auth";
-
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { login } from "@/features/auth/authSlice";
 type LoginForm = {
   email: string;
   password: string;
@@ -24,40 +24,31 @@ type LoginForm = {
 export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+
+  const { user, token, loginLoading, error } = useAppSelector(
+    (state) => state.auth,
+  );
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginForm>({
     defaultValues: { email: "", password: "" },
   });
 
-  // Redirect if already logged in
   useEffect(() => {
-    if (isAuthenticated()) router.replace("/admin");
-  }, [router]);
+    if (token) {
+      router.replace("/admin");
+    }
+  }, [token, router]);
 
   const onSubmit = async (data: LoginForm) => {
-    setServerError(null);
-    try {
-      const res = await loginApi(data);
-      setToken(res.token);
-      setUser(res.user);
+    const result = await dispatch(login(data));
+
+    if (login.fulfilled.match(result)) {
       router.push("/admin");
-    } catch (err: unknown) {
-      // Axios error shape
-      const axiosErr = err as {
-        response?: { data?: { message?: string; error?: string } };
-        message?: string;
-      };
-      const msg =
-        axiosErr?.response?.data?.message ||
-        axiosErr?.response?.data?.error ||
-        axiosErr?.message ||
-        "Something went wrong. Please try again.";
-      setServerError(msg);
     }
   };
 
@@ -165,10 +156,10 @@ export default function LoginPage() {
           </div>
 
           {/* Server error */}
-          {serverError && (
+          {error.login && (
             <div className="flex items-start gap-3 p-4 rounded-xl mb-6 text-sm text-[#ff6b6b] bg-[rgba(255,68,68,0.08)] border border-(--border)">
               <AlertCircle size={16} className="shrink-0 mt-0.5" />
-              <span>{serverError}</span>
+              <span>{error.login}</span>
             </div>
           )}
 
@@ -296,10 +287,10 @@ export default function LoginPage() {
             {/* Submit */}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={loginLoading}
               className="relative w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed mt-1 bg-(--primary) text-(--muted) font-display shadow-[0_0_30px_rgba(232,255,71,0.15)]"
             >
-              {isSubmitting ? (
+              {loginLoading ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
                   Signing in...

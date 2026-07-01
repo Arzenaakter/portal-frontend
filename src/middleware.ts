@@ -1,27 +1,36 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+const protectedRoutes = ["/admin"];
+const authRoutes = ["/login", "/register"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Routes that require authentication
-  const protectedPaths = ["/admin"];
-  const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
-
-  if (!isProtected) return NextResponse.next();
-
-  // Check for token in cookies (set on login)
   const token = request.cookies.get("auth_token")?.value;
 
-  if (!token) {
+  // Protect Admin Pages
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  if (isProtectedRoute && !token) {
     const loginUrl = new URL("/login", request.url);
+
     loginUrl.searchParams.set("redirect", pathname);
+
     return NextResponse.redirect(loginUrl);
+  }
+
+  // Prevent logged-in users from visiting Login/Register
+  const isAuthRoute = authRoutes.includes(pathname);
+
+  if (isAuthRoute && token) {
+    return NextResponse.redirect(new URL("/admin", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/login", "/register"],
 };

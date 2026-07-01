@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Syne } from "next/font/google";
 import "./globals.css";
+import ReduxProvider from "@/redux/provider";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -28,7 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${syne.className} ${dmSans.className}`}>{children}</body>
+      <body className={`${syne.className} ${dmSans.className}`}>
+        <ReduxProvider>{children}</ReduxProvider>
+      </body>
     </html>
   );
 }

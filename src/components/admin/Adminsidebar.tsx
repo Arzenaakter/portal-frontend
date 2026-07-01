@@ -7,21 +7,18 @@ import {
   Video,
   Users,
   BarChart2,
-  Settings,
-  Tag,
-  MessageSquare,
-  Bell,
   ChevronLeft,
   ChevronRight,
   Zap,
   LogOut,
 } from "lucide-react";
-import { useState, useEffect } from "react";
-import { logoutApi } from "@/lib/auth";
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { logout } from "@/features/auth/authSlice";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin", badge: null },
-  { label: "Videos", icon: Video, href: "/admin/videos", badge: "8" },
+  { label: "Courses", icon: Video, href: "/admin/courses", badge: "8" },
 
   { label: "Users", icon: Users, href: "/admin/users", badge: null },
   {
@@ -32,57 +29,23 @@ const navItems = [
   },
 ];
 
-// const bottomItems = [
-//   { label: "Notifications", icon: Bell, href: "/admin/notifications" },
-//   { label: "Settings", icon: Settings, href: "/admin/settings" },
-// ];
-
-function getInitialUser() {
-  if (typeof window === "undefined") {
-    return {
-      name: "Admin",
-      email: "admin@learnhub.com",
-      initial: "A",
-    };
-  }
-
-  try {
-    const raw = localStorage.getItem("auth_user");
-    if (!raw) {
-      return {
-        name: "Admin",
-        email: "admin@learnhub.com",
-        initial: "A",
-      };
-    }
-
-    const parsed = JSON.parse(raw);
-    const name = parsed?.name ?? "Admin";
-    const email = parsed?.email ?? "admin@learnhub.com";
-    const initial = name?.[0]?.toUpperCase() ?? "A";
-
-    return { name, email, initial };
-  } catch {
-    return {
-      name: "Admin",
-      email: "admin@learnhub.com",
-      initial: "A",
-    };
-  }
-}
-
 export default function Adminsidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
-  const initialUser = useState(() => getInitialUser())[0];
-  const [userName, setUserName] = useState(initialUser.name);
-  const [userEmail, setUserEmail] = useState(initialUser.email);
-  const [userInitial, setUserInitial] = useState(initialUser.initial);
 
-  const handleLogout = async () => {
-    await logoutApi();
-    router.push("/login");
+  const dispatch = useAppDispatch();
+
+  const { user } = useAppSelector((state) => state.auth);
+
+  const userName = user?.name ?? "Admin";
+  const userEmail = user?.email ?? "admin@learnhub.com";
+  const userInitial = user?.name?.charAt(0).toUpperCase() ?? "A";
+
+  const handleLogout = () => {
+    dispatch(logout());
+
+    router.replace("/login");
   };
 
   const width = collapsed ? 64 : 240;
@@ -174,18 +137,18 @@ export default function Adminsidebar() {
                     <span className="flex-1 whitespace-nowrap font-body text-sm font-medium">
                       {label}
                     </span>
-                    {badge && (
+                    {/* {badge && (
                       <span className="rounded-full bg-[rgba(232,255,71,0.15)] px-2 py-0.5 text-[11px] font-bold text-(--primary)">
                         {badge}
                       </span>
-                    )}
+                    )} */}
                   </>
                 )}
-                {collapsed && badge && (
+                {/* {collapsed && badge && (
                   <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-(--primary) text-[10px] text-(--muted)">
                     {badge}
                   </span>
-                )}
+                )} */}
               </Link>
             );
           })}

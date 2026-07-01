@@ -2,9 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import AdminHeader from "@/components/admin/Adminheader";
-import Videoform from "@/components/admin/Videoform";
-import { Video } from "@/types";
-import { getVideosApi, deleteVideoApi } from "@/lib/videoApi";
+// import Videoform from "@/components/admin/CourseForm";
+import CourseForm from "@/components/admin/CourseForm";
+import { Course } from "@/features/course/courseApi";
+
+import { getCourses, deleteCourse } from "@/features/course/courseSlice";
+
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   Plus,
   Pencil,
@@ -18,17 +22,22 @@ import {
   Loader2,
   RefreshCw,
 } from "lucide-react";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 type SortField = "title" | "category" | "views" | "createdAt";
 type SortDir = "asc" | "desc";
 
-export default function AdminVideosPage() {
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState<string | null>(null);
+export default function AdmincoursesPage() {
+  const dispatch = useAppDispatch();
+
+  const { courses, fetchLoading, error } = useAppSelector(
+    (state) => state.course,
+  );
+
   const [formMode, setFormMode] = useState<"add" | "edit" | null>(null);
-  const [editingVideo, setEditingVideo] = useState<Video | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<Video | null>(null);
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+
+  const [deleteTarget, setDeleteTarget] = useState<Course | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<{ field: SortField; dir: SortDir }>({
@@ -39,36 +48,16 @@ export default function AdminVideosPage() {
   const perPage = 6;
 
   // ── Fetch all videos from API ──────────────────────────────────────────────
-  const fetchVideos = useCallback(async () => {
-    setLoading(true);
-    setFetchError(null);
-    try {
-      const data = await getVideosApi();
-
-      // Support both { data: [] } and plain [] responses
-      setVideos(Array.isArray(data) ? data : (data.data ?? []));
-    } catch (err: unknown) {
-      const e = err as {
-        response?: { data?: { message?: string } };
-        message?: string;
-      };
-      setFetchError(
-        e?.response?.data?.message || e?.message || "Failed to load videos.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const fetchCourses = useCallback(async () => {
+    await dispatch(getCourses());
+  }, [dispatch]);
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      fetchVideos();
-    }, 0);
-    return () => window.clearTimeout(timeout);
-  }, [fetchVideos]);
+    fetchCourses();
+  }, [fetchCourses]);
 
   // ── Filter + sort ──────────────────────────────────────────────────────────
-  const filtered = videos
+  const filtered = courses
     .filter((v) =>
       [v.title, v.category, v.subcategory, v.caption].some((f) =>
         (f || "").toLowerCase().includes(search.toLowerCase()),
@@ -76,14 +65,17 @@ export default function AdminVideosPage() {
     )
     .sort((a, b) => {
       const dir = sort.dir === "asc" ? 1 : -1;
-      if (sort.field === "views")
-        return ((a.views || 0) - (b.views || 0)) * dir;
       if (sort.field === "createdAt")
         return (
-          (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) *
+          (new Date(a.createdAt ?? "").getTime() -
+            new Date(b.createdAt ?? "").getTime()) *
           dir
         );
-      return (a[sort.field] || "").localeCompare(b[sort.field] || "") * dir;
+      return (
+        (String(a[sort.field as keyof Course] ?? "") as string).localeCompare(
+          String(b[sort.field as keyof Course] ?? "") as string,
+        ) * dir
+      );
     });
 
   const totalPages = Math.ceil(filtered.length / perPage);
@@ -99,18 +91,10 @@ export default function AdminVideosPage() {
   };
 
   // ── onSuccess from form (add or edit) ─────────────────────────────────────
-  const handleFormSuccess = (video: Video) => {
-    setVideos((prev) => {
-      const exists = prev.find((v) => v._id === video._id);
-      if (exists) {
-        // update existing
-        return prev.map((v) => (v._id === video._id ? video : v));
-      }
-      // add new to top
-      return [video, ...prev];
-    });
+  const handleFormSuccess = () => {
+    fetchCourses();
     setFormMode(null);
-    setEditingVideo(null);
+    setEditingCourse(null);
   };
 
   // ── Delete ─────────────────────────────────────────────────────────────────
@@ -118,19 +102,13 @@ export default function AdminVideosPage() {
     if (!deleteTarget) return;
     setDeleteLoading(true);
     try {
-      await deleteVideoApi(deleteTarget._id);
-      setVideos((prev) => prev.filter((v) => v._id !== deleteTarget._id));
+      await dispatch(deleteCourse(deleteTarget._id)).unwrap();
+
       setDeleteTarget(null);
-    } catch (err: unknown) {
-      const e = err as {
-        response?: { data?: { message?: string } };
-        message?: string;
-      };
-      alert(
-        e?.response?.data?.message || e?.message || "Failed to delete video.",
-      );
-    } finally {
-      setDeleteLoading(false);
+
+      fetchCourses();
+    } catch (err) {
+      alert(getErrorMessage(err));
     }
   };
 
@@ -171,8 +149,10 @@ export default function AdminVideosPage() {
         style={{ display: isFormOpen ? undefined : "flex" }}
       >
         <AdminHeader
-          title="Videos"
-          subtitle={loading ? "Loading..." : `${videos.length} total videos`}
+          title="Courses"
+          subtitle={
+            fetchLoading ? "Loading..." : `${courses.length} total courses`
+          }
         />
 
         <div className="flex-1 overflow-auto p-6">
@@ -189,7 +169,7 @@ export default function AdminVideosPage() {
                   setSearch(e.target.value);
                   setPage(1);
                 }}
-                placeholder="Search videos..."
+                placeholder="Search courses..."
                 className="pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none w-64 border border-(--border) bg-(--card) text-(--foreground)"
               />
             </div>
@@ -197,37 +177,37 @@ export default function AdminVideosPage() {
             <div className="flex items-center gap-2">
               {/* Refresh */}
               <button
-                onClick={fetchVideos}
-                disabled={loading}
+                onClick={fetchCourses}
+                disabled={fetchLoading}
                 className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm transition-all hover:opacity-80 border border-(--border)  text-(--muted-foreground)"
                 title="Refresh"
               >
                 <RefreshCw
                   size={14}
-                  className={loading ? "animate-spin" : ""}
+                  className={fetchLoading ? "animate-spin" : ""}
                 />
               </button>
 
-              {/* Add video */}
+              {/* Add course */}
               <button
                 onClick={() => {
                   setFormMode("add");
-                  setEditingVideo(null);
+                  setEditingCourse(null);
                 }}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 active:scale-95 bg-(--primary) text-(--muted) font-display"
               >
-                <Plus size={16} /> Add Video
+                <Plus size={16} /> Add Course
               </button>
             </div>
           </div>
 
           {/* Fetch error */}
-          {fetchError && (
+          {error && (
             <div className="flex items-center gap-3 p-4 rounded-xl mb-5 text-sm bg-[rgba(255,68,68,0.08)] border border-(--border) text-[#ff6b6b]">
               <AlertTriangle size={15} />
-              <span className="flex-1">{fetchError}</span>
+              <span className="flex-1">{error}</span>
               <button
-                onClick={fetchVideos}
+                onClick={fetchCourses}
                 className="font-semibold underline hover:opacity-70"
               >
                 Retry
@@ -277,13 +257,13 @@ export default function AdminVideosPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {loading ? (
+                  {fetchLoading ? (
                     <tr>
                       <td colSpan={6} className="text-center py-16">
                         <div className="flex flex-col items-center gap-3 text-(--primary)">
                           <Loader2 size={24} className="animate-spin" />
                           <p className="text-sm text-(--muted-foreground)">
-                            Loading videos...
+                            Loading courses...
                           </p>
                         </div>
                       </td>
@@ -295,14 +275,14 @@ export default function AdminVideosPage() {
                         className="text-center py-16 text-sm text-(--muted-foreground)"
                       >
                         {search
-                          ? "No videos match your search."
-                          : "No videos yet. Add your first one!"}
+                          ? "No courses match your search."
+                          : "No courses yet. Add your first one!"}
                       </td>
                     </tr>
                   ) : (
-                    paginated.map((video, i) => (
+                    paginated.map((course, i) => (
                       <tr
-                        key={video._id}
+                        key={course._id}
                         className="border-b transition-colors hover:opacity-90 group border-(--border)"
                       >
                         <td className="px-5 py-4 text-xs text-(--muted-foreground)">
@@ -312,16 +292,16 @@ export default function AdminVideosPage() {
                           <div className="flex items-center gap-3">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                              src={video.thumbnail}
+                              src={course.thumbnail}
                               alt=""
                               className="w-14 h-9 rounded-lg object-cover shrink-0 border border-(--border)"
                             />
                             <div className="min-w-0">
                               <p className="text-sm font-semibold leading-tight line-clamp-1 mb-0.5 font-display text-(--foreground)">
-                                {video.title}
+                                {course.title}
                               </p>
                               <p className="text-xs line-clamp-1 text-(--muted-foreground)">
-                                {video.caption}
+                                {course.caption}
                               </p>
                             </div>
                           </div>
@@ -329,36 +309,42 @@ export default function AdminVideosPage() {
                         <td className="px-5 py-4">
                           <div className="flex flex-col gap-1">
                             <span className="text-xs font-medium px-2 py-0.5 rounded-lg w-fit bg-[rgba(232,255,71,0.08)] text-(--primary)">
-                              {video.category}
+                              {course.category}
                             </span>
                             <span className="text-xs text-(--muted-foreground)">
-                              {video.subcategory}
+                              {course.subcategory}
                             </span>
                           </div>
                         </td>
                         <td className="px-5 py-4">
-                          <div className="flex items-center gap-1 text-sm text-(--muted-foreground)">
+                          {/* <div className="flex items-center gap-1 text-sm text-(--muted-foreground)">
                             <Eye size={12} />
-                            {((video.views || 0) / 1000).toFixed(1)}k
-                          </div>
-                          {video.duration && (
+                            {((course.views || 0) / 1000).toFixed(1)}k
+                          </div> */}
+                          {/* {course.duration && (
                             <div className="flex items-center gap-1 text-xs mt-0.5 text-(--muted-foreground)">
                               <Clock size={10} />
-                              {video.duration}
+                              {course.duration}
                             </div>
-                          )}
+                          )} */}
                         </td>
                         <td className="px-5 py-4 text-sm text-(--muted-foreground)">
-                          {new Date(video.createdAt).toLocaleDateString(
-                            "en-US",
-                            { month: "short", day: "numeric", year: "numeric" },
-                          )}
+                          {course.createdAt
+                            ? new Date(course.createdAt).toLocaleDateString(
+                                "en-US",
+                                {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                },
+                              )
+                            : "—"}
                         </td>
                         <td className="px-5 py-4">
                           <div className="flex items-center justify-end gap-2">
                             <button
                               onClick={() => {
-                                setEditingVideo(video);
+                                setEditingCourse(course);
                                 setFormMode("edit");
                               }}
                               className="p-2 rounded-lg transition-all hover:opacity-80 border border-(--border) text-(--primary)"
@@ -367,7 +353,7 @@ export default function AdminVideosPage() {
                               <Pencil size={13} />
                             </button>
                             <button
-                              onClick={() => setDeleteTarget(video)}
+                              onClick={() => setDeleteTarget(course)}
                               className="p-2 rounded-lg transition-all hover:opacity-80 border border-(--border) text-(--destructive)"
                               title="Delete"
                             >
@@ -417,13 +403,13 @@ export default function AdminVideosPage() {
       {/* ── Side panel form ── */}
       {isFormOpen && (
         <div className="flex flex-col border-l overflow-hidden  w-[45%] min-w-120 max-w-160 border border-(--border) bg-(--background)">
-          <Videoform
+          <CourseForm
             mode={formMode!}
-            initialData={editingVideo || undefined}
+            initialData={editingCourse || undefined}
             onSuccess={handleFormSuccess}
             onCancel={() => {
               setFormMode(null);
-              setEditingVideo(null);
+              setEditingCourse(null);
             }}
           />
         </div>

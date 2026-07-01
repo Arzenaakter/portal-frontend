@@ -18,6 +18,14 @@ export interface Category {
   subcategories: string[];
 }
 
+export interface RegisterForm {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: "user" | "admin";
+}
+
 export const CATEGORIES: Category[] = [
   {
     _id: "web-dev",

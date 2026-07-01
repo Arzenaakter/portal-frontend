@@ -17,22 +17,23 @@ import {
   Loader2,
   CheckCircle2,
 } from "lucide-react";
-import axios from "axios";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { register as registerUser } from "@/features/auth/authSlice";
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [serverError, setServerError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const { registerLoading, error } = useAppSelector((state) => state.auth);
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       name: "",
@@ -47,24 +48,21 @@ export default function RegisterPage() {
   const watchRole = watch("role");
 
   const onSubmit = async (data) => {
-    setServerError(null);
-    try {
-      await axios.post(`${API_BASE_URL}/auth/register`, {
+    const result = await dispatch(
+      registerUser({
         name: data.name,
         email: data.email,
         password: data.password,
         role: data.role,
-      });
+      }),
+    );
+
+    if (registerUser.fulfilled.match(result)) {
       setSuccess(true);
-      setTimeout(() => router.push("/login"), 2000);
-    } catch (err) {
-      const axiosErr = err;
-      const msg =
-        axiosErr?.response?.data?.message ||
-        axiosErr?.response?.data?.error ||
-        axiosErr?.message ||
-        "Registration failed. Please try again.";
-      setServerError(msg);
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     }
   };
 
@@ -208,10 +206,10 @@ export default function RegisterPage() {
           </div>
 
           {/* Server error */}
-          {serverError && (
+          {error.register && (
             <div className="flex items-start gap-3 p-4 rounded-xl mb-6 text-sm text-[#ff6b6b] border border-[rgba(255,68,68,0.25)] bg-[rgba(255,68,68,0.08)]">
               <AlertCircle size={16} className="shrink-0 mt-0.5" />
-              <span>{serverError}</span>
+              <span>{error.register}</span>
             </div>
           )}
 
@@ -474,10 +472,10 @@ export default function RegisterPage() {
             {/* Submit */}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={registerLoading}
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed mt-1 bg-(--primary) text-(--muted) shadow-[0_0_30px_rgba(232,255,71,0.12)] font-display"
             >
-              {isSubmitting ? (
+              {registerLoading ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
                   Creating account...

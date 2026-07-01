@@ -2,13 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Video, CATEGORIES } from "@/types";
 import RichTextEditor from "./Richtexteditor";
-import {
-  createVideoApi,
-  updateVideoApi,
-  uploadImageToImgbb,
-} from "@/lib/videoApi";
+
+import { CATEGORIES } from "@/types";
+import { Course } from "@/features/course/courseApi";
+import { createCourse, updateCourse } from "@/features/course/courseSlice";
+import { useAppDispatch } from "@/redux/hooks";
+
 import {
   X,
   Save,
@@ -22,6 +22,7 @@ import {
   Loader2,
   Film,
 } from "lucide-react";
+import { uploadImageToImgbb } from "@/lib/uploadImageToImgbb";
 
 type FormValues = {
   title: string;
@@ -32,19 +33,19 @@ type FormValues = {
   subcategory: string;
 };
 
-interface VideoFormProps {
+interface CourseFormProps {
   mode: "add" | "edit";
-  initialData?: Partial<Video>;
-  onSuccess: (video: Video) => void;
+  initialData?: Partial<Course>;
+  onSuccess: (course: Course) => void;
   onCancel: () => void;
 }
 
-export default function Videoform({
+export default function CourseForm({
   mode,
   initialData,
   onSuccess,
   onCancel,
-}: VideoFormProps) {
+}: CourseFormProps) {
   const [descriptionHtml, setDescriptionHtml] = useState(
     initialData?.description || "",
   );
@@ -62,6 +63,7 @@ export default function Videoform({
   );
   const [thumbDragging, setThumbDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useAppDispatch();
 
   const {
     register,
@@ -163,11 +165,17 @@ export default function Videoform({
         thumbnail: thumbnailUrl,
       };
 
-      let result: Video;
+      let result: Course;
+
       if (mode === "add") {
-        result = await createVideoApi(payload);
+        result = await dispatch(createCourse(payload)).unwrap();
       } else {
-        result = await updateVideoApi(initialData!._id!, payload);
+        result = await dispatch(
+          updateCourse({
+            id: initialData!._id!,
+            data: payload,
+          }),
+        ).unwrap();
       }
 
       setSubmitStatus("success");
@@ -252,11 +260,11 @@ export default function Videoform({
           </div>
           <div>
             <h2 className="font-bold text-(--foreground) font-display">
-              {mode === "add" ? "Add New Video" : "Edit Video"}
+              {mode === "add" ? "Add New Course" : "Edit Course"}
             </h2>
             <p className="text-xs text-(--muted-foreground)">
               {mode === "add"
-                ? "Fill in the details to publish a new course video"
+                ? "Fill in the details to publish a new course"
                 : `Editing: ${initialData?.title}`}
             </p>
           </div>
