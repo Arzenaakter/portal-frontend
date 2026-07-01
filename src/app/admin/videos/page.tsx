@@ -44,7 +44,7 @@ export default function AdminVideosPage() {
     setFetchError(null);
     try {
       const data = await getVideosApi();
-    
+
       // Support both { data: [] } and plain [] responses
       setVideos(Array.isArray(data) ? data : (data.data ?? []));
     } catch (err: unknown) {
@@ -167,7 +167,7 @@ export default function AdminVideosPage() {
     <div className="flex h-full overflow-hidden">
       {/* ── Table panel ── */}
       <div
-        className="flex flex-col flex-1 overflow-hidden transition-all duration-300"
+        className="flex flex-col flex-1 overflow-hidden transition-all duration-300 "
         style={{ display: isFormOpen ? undefined : "flex" }}
       >
         <AdminHeader
@@ -181,8 +181,7 @@ export default function AdminVideosPage() {
             <div className="relative">
               <Search
                 size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2"
-                style={{ color: "var(--muted-foreground)" }}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-(--muted-foreground)"
               />
               <input
                 value={search}
@@ -191,12 +190,7 @@ export default function AdminVideosPage() {
                   setPage(1);
                 }}
                 placeholder="Search videos..."
-                className="pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none w-64"
-                style={{
-                  background: "var(--card)",
-                  border: "1px solid var(--border)",
-                  color: "var(--foreground)",
-                }}
+                className="pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none w-64 border border-(--border) bg-(--card) text-(--foreground)"
               />
             </div>
 
@@ -205,11 +199,7 @@ export default function AdminVideosPage() {
               <button
                 onClick={fetchVideos}
                 disabled={loading}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm transition-all hover:opacity-80"
-                style={{
-                  border: "1px solid var(--border)",
-                  color: "var(--muted-foreground)",
-                }}
+                className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm transition-all hover:opacity-80 border border-(--border)  text-(--muted-foreground)"
                 title="Refresh"
               >
                 <RefreshCw
@@ -224,12 +214,7 @@ export default function AdminVideosPage() {
                   setFormMode("add");
                   setEditingVideo(null);
                 }}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 active:scale-95"
-                style={{
-                  background: "var(--primary)",
-                  color: "black",
-                  fontFamily: "var(--font-display)",
-                }}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 active:scale-95 bg-(--primary) text-(--muted) font-display"
               >
                 <Plus size={16} /> Add Video
               </button>
@@ -238,14 +223,7 @@ export default function AdminVideosPage() {
 
           {/* Fetch error */}
           {fetchError && (
-            <div
-              className="flex items-center gap-3 p-4 rounded-xl mb-5 text-sm"
-              style={{
-                background: "rgba(255,68,68,0.08)",
-                border: "1px solid rgba(255,68,68,0.25)",
-                color: "#ff6b6b",
-              }}
-            >
+            <div className="flex items-center gap-3 p-4 rounded-xl mb-5 text-sm bg-[rgba(255,68,68,0.08)] border border-(--border) text-[#ff6b6b]">
               <AlertTriangle size={15} />
               <span className="flex-1">{fetchError}</span>
               <button
@@ -259,27 +237,18 @@ export default function AdminVideosPage() {
 
           {/* Table */}
           <div
-            className="rounded-2xl overflow-hidden"
+            className="rounded-2xl overflow-hidden bg-(--card) border border-(--border) "
             style={{
               background: "var(--card)",
               border: "1px solid var(--border)",
             }}
           >
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[700px]">
+              <table className="w-full min-w-175">
                 <thead>
-                  <tr
-                    className="border-b"
-                    style={{
-                      borderColor: "var(--border)",
-                      background: "rgba(30,32,38,0.5)",
-                    }}
-                  >
+                  <tr className="border-b border-(--border) bg-[rgba(30,32,38,0.5)]">
                     <th className="text-left px-5 py-3.5 w-12">
-                      <span
-                        className="text-xs font-semibold uppercase tracking-wider"
-                        style={{ color: "var(--muted-foreground)" }}
-                      >
+                      <span className="text-xs font-semibold uppercase tracking-wider text-(--muted-foreground)">
                         #
                       </span>
                     </th>
@@ -294,23 +263,14 @@ export default function AdminVideosPage() {
                         className="text-left px-5 py-3.5 cursor-pointer select-none"
                         onClick={() => toggleSort(field)}
                       >
-                        <span
-                          className="flex items-center text-xs font-semibold uppercase tracking-wider"
-                          style={{
-                            color: "var(--muted-foreground)",
-                            fontFamily: "var(--font-display)",
-                          }}
-                        >
+                        <span className="flex items-center text-xs font-semibold uppercase tracking-wider font-display text-(--muted-foreground)">
                           {label}
                           <SortIcon field={field} />
                         </span>
                       </th>
                     ))}
                     <th className="text-right px-5 py-3.5">
-                      <span
-                        className="text-xs font-semibold uppercase tracking-wider"
-                        style={{ color: "var(--muted-foreground)" }}
-                      >
+                      <span className="text-xs font-semibold uppercase tracking-wider text-(--muted-foreground)">
                         Actions
                       </span>
                     </th>
@@ -320,16 +280,9 @@ export default function AdminVideosPage() {
                   {loading ? (
                     <tr>
                       <td colSpan={6} className="text-center py-16">
-                        <div className="flex flex-col items-center gap-3">
-                          <Loader2
-                            size={24}
-                            className="animate-spin"
-                            style={{ color: "var(--primary)" }}
-                          />
-                          <p
-                            className="text-sm"
-                            style={{ color: "var(--muted-foreground)" }}
-                          >
+                        <div className="flex flex-col items-center gap-3 text-(--primary)">
+                          <Loader2 size={24} className="animate-spin" />
+                          <p className="text-sm text-(--muted-foreground)">
                             Loading videos...
                           </p>
                         </div>
@@ -339,8 +292,7 @@ export default function AdminVideosPage() {
                     <tr>
                       <td
                         colSpan={6}
-                        className="text-center py-16 text-sm"
-                        style={{ color: "var(--muted-foreground)" }}
+                        className="text-center py-16 text-sm text-(--muted-foreground)"
                       >
                         {search
                           ? "No videos match your search."
@@ -351,13 +303,9 @@ export default function AdminVideosPage() {
                     paginated.map((video, i) => (
                       <tr
                         key={video._id}
-                        className="border-b transition-colors hover:opacity-90 group"
-                        style={{ borderColor: "var(--border)" }}
+                        className="border-b transition-colors hover:opacity-90 group border-(--border)"
                       >
-                        <td
-                          className="px-5 py-4 text-xs"
-                          style={{ color: "var(--muted-foreground)" }}
-                        >
+                        <td className="px-5 py-4 text-xs text-(--muted-foreground)">
                           {(page - 1) * perPage + i + 1}
                         </td>
                         <td className="px-5 py-4">
@@ -366,23 +314,13 @@ export default function AdminVideosPage() {
                             <img
                               src={video.thumbnail}
                               alt=""
-                              className="w-14 h-9 rounded-lg object-cover flex-shrink-0"
-                              style={{ border: "1px solid var(--border)" }}
+                              className="w-14 h-9 rounded-lg object-cover shrink-0 border border-(--border)"
                             />
                             <div className="min-w-0">
-                              <p
-                                className="text-sm font-semibold leading-tight line-clamp-1 mb-0.5"
-                                style={{
-                                  fontFamily: "var(--font-display)",
-                                  color: "var(--foreground)",
-                                }}
-                              >
+                              <p className="text-sm font-semibold leading-tight line-clamp-1 mb-0.5 font-display text-(--foreground)">
                                 {video.title}
                               </p>
-                              <p
-                                className="text-xs line-clamp-1"
-                                style={{ color: "var(--muted-foreground)" }}
-                              >
+                              <p className="text-xs line-clamp-1 text-(--muted-foreground)">
                                 {video.caption}
                               </p>
                             </div>
@@ -390,45 +328,27 @@ export default function AdminVideosPage() {
                         </td>
                         <td className="px-5 py-4">
                           <div className="flex flex-col gap-1">
-                            <span
-                              className="text-xs font-medium px-2 py-0.5 rounded-lg w-fit"
-                              style={{
-                                background: "rgba(232,255,71,0.08)",
-                                color: "var(--primary)",
-                              }}
-                            >
+                            <span className="text-xs font-medium px-2 py-0.5 rounded-lg w-fit bg-[rgba(232,255,71,0.08)] text-(--primary)">
                               {video.category}
                             </span>
-                            <span
-                              className="text-xs"
-                              style={{ color: "var(--muted-foreground)" }}
-                            >
+                            <span className="text-xs text-(--muted-foreground)">
                               {video.subcategory}
                             </span>
                           </div>
                         </td>
                         <td className="px-5 py-4">
-                          <div
-                            className="flex items-center gap-1 text-sm"
-                            style={{ color: "var(--muted-foreground)" }}
-                          >
+                          <div className="flex items-center gap-1 text-sm text-(--muted-foreground)">
                             <Eye size={12} />
                             {((video.views || 0) / 1000).toFixed(1)}k
                           </div>
                           {video.duration && (
-                            <div
-                              className="flex items-center gap-1 text-xs mt-0.5"
-                              style={{ color: "var(--muted-foreground)" }}
-                            >
+                            <div className="flex items-center gap-1 text-xs mt-0.5 text-(--muted-foreground)">
                               <Clock size={10} />
                               {video.duration}
                             </div>
                           )}
                         </td>
-                        <td
-                          className="px-5 py-4 text-sm"
-                          style={{ color: "var(--muted-foreground)" }}
-                        >
+                        <td className="px-5 py-4 text-sm text-(--muted-foreground)">
                           {new Date(video.createdAt).toLocaleDateString(
                             "en-US",
                             { month: "short", day: "numeric", year: "numeric" },
@@ -441,22 +361,14 @@ export default function AdminVideosPage() {
                                 setEditingVideo(video);
                                 setFormMode("edit");
                               }}
-                              className="p-2 rounded-lg transition-all hover:opacity-80"
-                              style={{
-                                border: "1px solid var(--border)",
-                                color: "#47c8e8",
-                              }}
+                              className="p-2 rounded-lg transition-all hover:opacity-80 border border-(--border) text-(--primary)"
                               title="Edit"
                             >
                               <Pencil size={13} />
                             </button>
                             <button
                               onClick={() => setDeleteTarget(video)}
-                              className="p-2 rounded-lg transition-all hover:opacity-80"
-                              style={{
-                                border: "1px solid rgba(255,68,68,0.3)",
-                                color: "var(--destructive)",
-                              }}
+                              className="p-2 rounded-lg transition-all hover:opacity-80 border border-(--border) text-(--destructive)"
                               title="Delete"
                             >
                               <Trash2 size={13} />
@@ -472,14 +384,8 @@ export default function AdminVideosPage() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div
-                className="flex items-center justify-between px-5 py-3 border-t"
-                style={{ borderColor: "var(--border)" }}
-              >
-                <span
-                  className="text-xs"
-                  style={{ color: "var(--muted-foreground)" }}
-                >
+              <div className="flex items-center justify-between px-5 py-3 border-t border-(--border)">
+                <span className="text-xs text-(--muted-foreground)">
                   Page {page} of {totalPages} · {filtered.length} results
                 </span>
                 <div className="flex items-center gap-2">
@@ -510,16 +416,7 @@ export default function AdminVideosPage() {
 
       {/* ── Side panel form ── */}
       {isFormOpen && (
-        <div
-          className="flex flex-col border-l overflow-hidden"
-          style={{
-            width: "45%",
-            minWidth: 480,
-            maxWidth: 640,
-            borderColor: "var(--border)",
-            background: "var(--background)",
-          }}
-        >
+        <div className="flex flex-col border-l overflow-hidden  w-[45%] min-w-120 max-w-160 border border-(--border) bg-(--background)">
           <Videoform
             mode={formMode!}
             initialData={editingVideo || undefined}
@@ -534,61 +431,32 @@ export default function AdminVideosPage() {
 
       {/* ── Delete modal ── */}
       {deleteTarget && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }}
-        >
-          <div
-            className="rounded-2xl p-6 w-full max-w-sm"
-            style={{
-              background: "var(--card)",
-              border: "1px solid var(--border)",
-            }}
-          >
-            <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4"
-              style={{ background: "rgba(255,68,68,0.1)" }}
-            >
-              <AlertTriangle
-                size={22}
-                style={{ color: "var(--destructive)" }}
-              />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="rounded-2xl p-6 w-full max-w-sm bg-(--card) border border-(--border)">
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4 bg-[rgba(255,68,68,0.1)]">
+              <AlertTriangle size={22} className="text-(--destructive)" />
             </div>
-            <h3
-              className="text-center font-bold text-lg mb-2"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
+            <h3 className="text-center font-bold text-lg mb-2 font-display">
               Delete Video?
             </h3>
-            <p
-              className="text-center text-sm mb-1"
-              style={{ color: "var(--muted-foreground)" }}
-            >
+            <p className="text-center text-sm mb-1 text-(--muted-foreground)">
               This will permanently delete
             </p>
-            <p
-              className="text-center text-sm font-semibold mb-6"
-              style={{ color: "var(--foreground)" }}
-            >
+            <p className="text-center text-sm font-semibold mb-6 text-(--foreground)">
               &ldquo;{deleteTarget.title}&rdquo;
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteTarget(null)}
                 disabled={deleteLoading}
-                className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-80 disabled:opacity-50"
-                style={{
-                  border: "1px solid var(--border)",
-                  color: "var(--muted-foreground)",
-                }}
+                className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-80 disabled:opacity-50 border border-(--border) text-(--muted-foreground)"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
                 disabled={deleteLoading}
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 disabled:opacity-60"
-                style={{ background: "var(--destructive)", color: "#fff" }}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 disabled:opacity-60 bg-(--destructive) text-(--destructive-foreground)"
               >
                 {deleteLoading ? (
                   <>

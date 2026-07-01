@@ -89,81 +89,30 @@ export default function Adminsidebar() {
 
   return (
     <aside
+      className="sticky top-0 flex h-screen shrink-0 flex-col overflow-hidden border-r border-(--border) bg-(--card)"
       style={{
         width,
         minWidth: width,
         maxWidth: width,
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        flexShrink: 0,
-        background: "var(--card)",
-        borderRight: "1px solid var(--border)",
         transition: "width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease",
-        overflow: "hidden",
-        position: "sticky",
-        top: 0,
       }}
     >
       {/* ── Logo row ── */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 16px",
-          height: 64,
-          borderBottom: "1px solid var(--border)",
-          flexShrink: 0,
-        }}
-      >
+      <div className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4">
         {!collapsed ? (
           <>
-            <Link
-              href="/"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                textDecoration: "none",
-              }}
-            >
-              <div
-                style={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 8,
-                  background: "var(--primary)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
+            <Link className="flex items-center gap-2 no-underline" href="/">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-(--primary) shrink-0">
                 <Zap size={14} fill="black" color="black" />
               </div>
-              <span
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 700,
-                  fontSize: 14,
-                  color: "var(--foreground)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Learn<span style={{ color: "var(--primary)" }}>Hub</span>
+              <span className="font-display text-sm font-bold whitespace-nowrap text-(--foreground)">
+                Learn
+                <span className="text-(--primary)">Hub</span>
               </span>
             </Link>
             <button
               onClick={() => setCollapsed(true)}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: 4,
-                color: "var(--muted-foreground)",
-                display: "flex",
-              }}
+              className="flex cursor-pointer border-0 bg-transparent p-1 text-(--muted-foreground)"
             >
               <ChevronLeft size={16} />
             </button>
@@ -171,18 +120,7 @@ export default function Adminsidebar() {
         ) : (
           <button
             onClick={() => setCollapsed(false)}
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 8,
-              background: "var(--primary)",
-              border: "none",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "0 auto",
-            }}
+            className="mx-auto flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border-0 bg-(--primary)"
           >
             <Zap size={14} fill="black" color="black" />
           </button>
@@ -193,19 +131,7 @@ export default function Adminsidebar() {
       {collapsed && (
         <button
           onClick={() => setCollapsed(false)}
-          style={{
-            margin: "12px auto 0",
-            width: 32,
-            height: 32,
-            borderRadius: 10,
-            border: "1px solid var(--border)",
-            background: "none",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "var(--muted-foreground)",
-          }}
+          className="mx-auto mt-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-[10px] border border-(--border) bg-transparent text-(--muted-foreground)"
         >
           <ChevronRight size={14} />
         </button>
@@ -213,26 +139,16 @@ export default function Adminsidebar() {
 
       {/* Section label */}
       {!collapsed && (
-        <div style={{ padding: "20px 16px 8px" }}>
-          <p
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              color: "#3a3d45",
-              fontFamily: "var(--font-display)",
-              margin: 0,
-            }}
-          >
+        <div className="px-4 pt-5 pb-2">
+          <p className="m-0 font-display text-[11px] font-semibold uppercase tracking-widest text-[#3a3d45]">
             Menu
           </p>
         </div>
       )}
 
       {/* ── Main nav ── */}
-      <nav style={{ flex: 1, overflowY: "auto", padding: "4px 8px" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+      <nav className="flex-1 overflow-y-auto p-1">
+        <div className="flex flex-col gap-1">
           {navItems.map(({ label, icon: Icon, href, badge }) => {
             const isActive =
               pathname === href ||
@@ -242,71 +158,31 @@ export default function Adminsidebar() {
                 key={href}
                 href={href}
                 title={collapsed ? label : undefined}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  textDecoration: "none",
-                  position: "relative",
-                  background: isActive ? "rgba(232,255,71,0.1)" : "transparent",
-                  color: isActive
-                    ? "var(--primary)"
-                    : "var(--muted-foreground)",
-                  border: isActive
-                    ? "1px solid rgba(232,255,71,0.15)"
-                    : "1px solid transparent",
-                  transition: "opacity 0.15s",
-                }}
+                className={`
+                  relative flex items-center gap-3 rounded-xl px-3 py-2.5
+                  no-underline transition-opacity duration-150
+                  ${
+                    isActive
+                      ? "border border-[rgba(232,255,71,0.15)] bg-[rgba(232,255,71,0.1)] text-(--primary)"
+                      : " bg-transparent text-(--muted-foreground)"
+                  }
+                 `}
               >
                 <Icon size={17} style={{ flexShrink: 0 }} />
                 {!collapsed && (
                   <>
-                    <span
-                      style={{
-                        fontSize: 14,
-                        fontWeight: 500,
-                        flex: 1,
-                        whiteSpace: "nowrap",
-                        fontFamily: "var(--font-body)",
-                      }}
-                    >
+                    <span className="flex-1 whitespace-nowrap font-body text-sm font-medium">
                       {label}
                     </span>
                     {badge && (
-                      <span
-                        style={{
-                          fontSize: 11,
-                          fontWeight: 700,
-                          padding: "2px 8px",
-                          borderRadius: 999,
-                          background: "rgba(232,255,71,0.15)",
-                          color: "var(--primary)",
-                        }}
-                      >
+                      <span className="rounded-full bg-[rgba(232,255,71,0.15)] px-2 py-0.5 text-[11px] font-bold text-(--primary)">
                         {badge}
                       </span>
                     )}
                   </>
                 )}
                 {collapsed && badge && (
-                  <span
-                    style={{
-                      position: "absolute",
-                      top: -4,
-                      right: -4,
-                      width: 16,
-                      height: 16,
-                      borderRadius: 999,
-                      fontSize: 10,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      background: "var(--primary)",
-                      color: "black",
-                    }}
-                  >
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-(--primary) text-[10px] text-(--muted)">
                     {badge}
                   </span>
                 )}
@@ -317,112 +193,32 @@ export default function Adminsidebar() {
       </nav>
 
       {/* Divider */}
-      <div
-        style={{ height: 1, background: "var(--border)", margin: "4px 12px" }}
-      />
+      <div className="mx-3 my-1 h-px bg-(--border)" />
 
       {/* ── Bottom nav ── */}
-      <div
-        style={{
-          padding: "4px 8px 12px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 4,
-        }}
-      >
-        {/* {bottomItems.map(({ label, icon: Icon, href }) => (
-          <Link
-            key={href}
-            href={href}
-            title={collapsed ? label : undefined}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "10px 12px",
-              borderRadius: 12,
-              textDecoration: "none",
-              color: "var(--muted-foreground)",
-            }}
-          >
-            <Icon size={17} style={{ flexShrink: 0 }} />
-            {!collapsed && (
-              <span
-                style={{ fontSize: 14, fontWeight: 500, whiteSpace: "nowrap" }}
-              >
-                {label}
-              </span>
-            )}
-          </Link>
-        ))} */}
-
+      <div className="flex flex-col gap-1 px-2 pt-1 pb-3">
         {/* User row / Logout */}
         <button
           onClick={handleLogout}
           title={collapsed ? "Logout" : undefined}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            padding: "10px 12px",
-            borderRadius: 12,
-            marginTop: 4,
-            border: "1px solid var(--border)",
-            background: "none",
-            cursor: "pointer",
-            width: "100%",
-            textAlign: "left",
-          }}
+          className="mt-1 flex w-full cursor-pointer items-center gap-3 rounded-xl border border-(--border) bg-transparent px-3 py-2.5 text-left"
         >
-          <div
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 999,
-              background: "var(--primary)",
-              color: "black",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 12,
-              fontWeight: 700,
-              flexShrink: 0,
-            }}
-          >
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-(--primary) text-xs font-bold text-(--muted)">
             {userInitial}
           </div>
           {!collapsed && (
             <>
-              <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
-                <p
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    margin: 0,
-                    color: "var(--foreground)",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
+              <div className="flex-1 min-w-0 text-left">
+                <p className="m-0 truncate text-xs font-semibold text-(--foreground)">
                   {userName}
                 </p>
-                <p
-                  style={{
-                    fontSize: 11,
-                    margin: 0,
-                    color: "var(--muted-foreground)",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
+                <p className="m-0 truncate text-[11px] text-(--muted-foreground)">
                   {userEmail}
                 </p>
               </div>
               <LogOut
                 size={14}
-                style={{ color: "var(--muted-foreground)", flexShrink: 0 }}
+                className="text-(--muted-foreground) shrink-0"
               />
             </>
           )}

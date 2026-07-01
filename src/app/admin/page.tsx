@@ -67,11 +67,7 @@ export default function AdminDashboardPage() {
           {stats.map(({ label, value, icon: Icon, change, color }) => (
             <div
               key={label}
-              className="rounded-2xl p-5 transition-all hover:opacity-90"
-              style={{
-                background: "var(--card)",
-                border: "1px solid var(--border)",
-              }}
+              className="rounded-2xl p-5 transition-all hover:opacity-90 border bg-(--card) border-(--border)"
             >
               <div className="flex items-start justify-between mb-4">
                 <div
@@ -80,29 +76,14 @@ export default function AdminDashboardPage() {
                 >
                   <Icon size={18} style={{ color }} />
                 </div>
-                <div
-                  className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-lg"
-                  style={{
-                    background: "rgba(71,232,71,0.08)",
-                    color: "#4ade80",
-                  }}
-                >
+                <div className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-lg bg-[rgba(71,232,71,0.08)] text-[#4ade80]">
                   <ArrowUpRight size={10} /> Up
                 </div>
               </div>
-              <div
-                className="text-2xl font-bold mb-1"
-                style={{
-                  fontFamily: "var(--font-display)",
-                  color: "var(--foreground)",
-                }}
-              >
+              <div className="text-2xl font-bold mb-1 text-(--foreground) font-display">
                 {value}
               </div>
-              <div
-                className="text-sm font-medium mb-1"
-                style={{ color: "var(--muted-foreground)" }}
-              >
+              <div className="text-sm font-medium mb-1 text-(--muted-foreground)">
                 {label}
               </div>
               <div className="text-xs" style={{ color }}>
@@ -113,27 +94,12 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Recent videos */}
-        <div
-          className="rounded-2xl overflow-hidden"
-          style={{
-            background: "var(--card)",
-            border: "1px solid var(--border)",
-          }}
-        >
-          <div
-            className="flex items-center justify-between px-6 py-4 border-b"
-            style={{ borderColor: "var(--border)" }}
-          >
-            <h2
-              className="font-bold"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              Recent Videos
-            </h2>
+        <div className="rounded-2xl overflow-hidden border bg-(--card) border-(--border)">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-(--border)">
+            <h2 className="font-bold font-display">Recent Videos</h2>
             <a
               href="/admin/videos"
-              className="text-xs font-semibold"
-              style={{ color: "var(--primary)" }}
+              className="text-xs font-semibold text-(--primary)"
             >
               Manage all →
             </a>
@@ -141,15 +107,8 @@ export default function AdminDashboardPage() {
 
           {loading ? (
             <div className="flex items-center justify-center py-16 gap-3">
-              <Loader2
-                size={20}
-                className="animate-spin"
-                style={{ color: "var(--primary)" }}
-              />
-              <span
-                className="text-sm"
-                style={{ color: "var(--muted-foreground)" }}
-              >
+              <Loader2 size={20} className="animate-spin text-(--primary)" />
+              <span className="text-sm text-(--muted-foreground)">
                 Loading videos...
               </span>
             </div>
@@ -157,18 +116,11 @@ export default function AdminDashboardPage() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr
-                    className="border-b"
-                    style={{ borderColor: "var(--border)" }}
-                  >
+                  <tr className="border-b border-(--border)">
                     {["Title", "Category", "Views", "Date"].map((h) => (
                       <th
                         key={h}
-                        className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider"
-                        style={{
-                          color: "var(--muted-foreground)",
-                          fontFamily: "var(--font-display)",
-                        }}
+                        className="text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider font-display text-(--muted-foreground)"
                       >
                         {h}
                       </th>
@@ -180,14 +132,10 @@ export default function AdminDashboardPage() {
                     <tr>
                       <td
                         colSpan={4}
-                        className="text-center py-12 text-sm"
-                        style={{ color: "var(--muted-foreground)" }}
+                        className="text-center py-12 text-sm text-(--muted-foreground)"
                       >
                         No videos yet.{" "}
-                        <a
-                          href="/admin/videos"
-                          style={{ color: "var(--primary)" }}
-                        >
+                        <a href="/admin/videos" className="text-(--primary)">
                           Add your first one →
                         </a>
                       </td>
@@ -196,8 +144,7 @@ export default function AdminDashboardPage() {
                     videos.slice(0, 5).map((video) => (
                       <tr
                         key={video._id}
-                        className="border-b transition-colors hover:opacity-80"
-                        style={{ borderColor: "var(--border)" }}
+                        className="border-b transition-colors hover:opacity-80 border-(--border)"
                       >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
@@ -205,46 +152,27 @@ export default function AdminDashboardPage() {
                             <img
                               src={video.thumbnail}
                               alt=""
-                              className="w-12 h-8 rounded-lg object-cover"
-                              style={{ border: "1px solid var(--border)" }}
+                              className="w-12 h-8 rounded-lg object-cover border border-(--border)"
                             />
                             <div>
-                              <p
-                                className="text-sm font-semibold line-clamp-1"
-                                style={{ fontFamily: "var(--font-display)" }}
-                              >
+                              <p className="text-sm font-semibold line-clamp-1 font-display">
                                 {video.title}
                               </p>
-                              <p
-                                className="text-xs"
-                                style={{ color: "var(--muted-foreground)" }}
-                              >
+                              <p className="text-xs text-(--muted-foreground) ">
                                 {video.duration || "—"}
                               </p>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span
-                            className="text-xs px-2 py-1 rounded-lg font-medium"
-                            style={{
-                              background: "rgba(232,255,71,0.1)",
-                              color: "var(--primary)",
-                            }}
-                          >
+                          <span className="text-xs px-2 py-1 rounded-lg font-medium bg-[rgba(232,255,71,0.1)] text-(--primary)">
                             {video.category}
                           </span>
                         </td>
-                        <td
-                          className="px-6 py-4 text-sm"
-                          style={{ color: "var(--muted-foreground)" }}
-                        >
+                        <td className="px-6 py-4 text-sm text-(--muted-foreground)">
                           {((video.views || 0) / 1000).toFixed(1)}k
                         </td>
-                        <td
-                          className="px-6 py-4 text-sm"
-                          style={{ color: "var(--muted-foreground)" }}
-                        >
+                        <td className="px-6 py-4 text-sm text-(--muted-foreground)">
                           {new Date(video.createdAt).toLocaleDateString()}
                         </td>
                       </tr>

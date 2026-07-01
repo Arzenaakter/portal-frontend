@@ -233,10 +233,7 @@ export default function Videoform({
   return (
     <div className="flex flex-col h-full">
       {/* ── Header ── */}
-      <div
-        className="flex items-center justify-between px-6 py-4 border-b flex-shrink-0"
-        style={{ borderColor: "var(--border)" }}
-      >
+      <div className="flex items-center justify-between px-6 py-4 border-b shrink-0 border-(--border) ">
         <div className="flex items-center gap-3">
           <div
             className="w-8 h-8 rounded-xl flex items-center justify-center"
@@ -248,22 +245,16 @@ export default function Videoform({
             }}
           >
             {mode === "add" ? (
-              <Plus size={16} style={{ color: "var(--primary)" }} />
+              <Plus size={16} className="text-(--primary)" />
             ) : (
-              <Save size={16} style={{ color: "#47c8e8" }} />
+              <Save size={16} className="text-[#47c8e8]" />
             )}
           </div>
           <div>
-            <h2
-              className="font-bold"
-              style={{
-                fontFamily: "var(--font-display)",
-                color: "var(--foreground)",
-              }}
-            >
+            <h2 className="font-bold text-(--foreground) font-display">
               {mode === "add" ? "Add New Video" : "Edit Video"}
             </h2>
-            <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
+            <p className="text-xs text-(--muted-foreground)">
               {mode === "add"
                 ? "Fill in the details to publish a new course video"
                 : `Editing: ${initialData?.title}`}
@@ -272,11 +263,7 @@ export default function Videoform({
         </div>
         <button
           onClick={onCancel}
-          className="p-2 rounded-xl transition-colors hover:opacity-70"
-          style={{
-            color: "var(--muted-foreground)",
-            border: "1px solid var(--border)",
-          }}
+          className="p-2 rounded-xl transition-colors hover:opacity-70 text-(--muted-foreground) border border-(--border)"
         >
           <X size={16} />
         </button>
@@ -284,25 +271,12 @@ export default function Videoform({
 
       {/* ── Error banner ── */}
       {serverError && (
-        <div
-          className="mx-6 mt-4 flex items-center gap-3 px-4 py-3 rounded-xl text-sm flex-shrink-0"
-          style={{
-            background: "rgba(255,68,68,0.08)",
-            border: "1px solid rgba(255,68,68,0.25)",
-            color: "#ff6b6b",
-          }}
-        >
+        <div className="mx-6 mt-4 flex items-center gap-3 px-4 py-3 rounded-xl text-sm shrink-0 border border-(--border) bg-[rgba(255,68,68,0.08)] text-[#ff6b6b]">
           <AlertCircle size={15} style={{ flexShrink: 0 }} />
           <span className="flex-1">{serverError}</span>
           <button
             onClick={() => setServerError(null)}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "#ff6b6b",
-              display: "flex",
-            }}
+            className="flex cursor-pointer border-0 bg-transparent text-[#ff6b6b]"
           >
             <X size={13} />
           </button>
@@ -311,21 +285,11 @@ export default function Videoform({
 
       {/* ── imgbb setup notice (only when no API key) ── */}
       {!process.env.NEXT_PUBLIC_IMGBB_API_KEY && (
-        <div
-          className="mx-6 mt-3 px-4 py-3 rounded-xl text-xs flex-shrink-0 flex items-start gap-2"
-          style={{
-            background: "rgba(232,255,71,0.05)",
-            border: "1px solid rgba(232,255,71,0.15)",
-            color: "#e8ff47",
-          }}
-        >
+        <div className="mx-6 mt-3 px-4 py-3 rounded-xl text-xs shrink-0 flex items-start gap-2 bg-[rgba(232,255,71,0.05)] border border-[rgba(232,255,71,0.15)] text-[#e8ff47]">
           <AlertCircle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
           <span>
             Add{" "}
-            <code
-              className="px-1 rounded"
-              style={{ background: "rgba(255,255,255,0.08)" }}
-            >
+            <code className="px-1 rounded bg-[rgba(255,255,255,0.08)]">
               NEXT_PUBLIC_IMGBB_API_KEY=your_key
             </code>{" "}
             to <code>.env.local</code> to enable image uploads. Get a free key
@@ -348,13 +312,7 @@ export default function Videoform({
           <div className="p-6 grid grid-cols-1 gap-6">
             {/* Title */}
             <div>
-              <label
-                className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-                style={{
-                  color: "var(--muted-foreground)",
-                  fontFamily: "var(--font-display)",
-                }}
-              >
+              <label className="block text-xs font-semibold mb-2 uppercase tracking-wider text-(--muted-foreground) font-display">
                 Title *
               </label>
               <input
@@ -367,10 +325,7 @@ export default function Videoform({
                 placeholder="e.g. Mastering React Hooks in 2024"
               />
               {errors.title && (
-                <p
-                  className="text-xs mt-1 flex items-center gap-1"
-                  style={{ color: "var(--destructive)" }}
-                >
+                <p className="text-xs mt-1 flex items-center gap-1 text-(--destructive)">
                   <AlertCircle size={10} />
                   {errors.title.message}
                 </p>
@@ -379,13 +334,7 @@ export default function Videoform({
 
             {/* Caption */}
             <div>
-              <label
-                className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-                style={{
-                  color: "var(--muted-foreground)",
-                  fontFamily: "var(--font-display)",
-                }}
-              >
+              <label className="block text-xs font-semibold mb-2 uppercase tracking-wider text-(--muted-foreground) font-display">
                 Caption *
               </label>
               <input
@@ -398,10 +347,7 @@ export default function Videoform({
                 placeholder="A short, catchy subtitle for your video"
               />
               {errors.caption && (
-                <p
-                  className="text-xs mt-1 flex items-center gap-1"
-                  style={{ color: "var(--destructive)" }}
-                >
+                <p className="text-xs mt-1 flex items-center gap-1 text-(--destructive)">
                   <AlertCircle size={10} />
                   {errors.caption.message}
                 </p>
@@ -411,13 +357,7 @@ export default function Videoform({
             {/* Category + Subcategory */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label
-                  className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-                  style={{
-                    color: "var(--muted-foreground)",
-                    fontFamily: "var(--font-display)",
-                  }}
-                >
+                <label className="block text-xs font-semibold mb-2 uppercase tracking-wider text-(--muted-foreground) font-display">
                   Category *
                 </label>
                 <div className="relative">
@@ -442,28 +382,18 @@ export default function Videoform({
                   </select>
                   <ChevronDown
                     size={14}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                    style={{ color: "var(--muted-foreground)" }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-(--muted-foreground)"
                   />
                 </div>
                 {errors.category && (
-                  <p
-                    className="text-xs mt-1"
-                    style={{ color: "var(--destructive)" }}
-                  >
+                  <p className="text-xs mt-1 text-(--destructive)">
                     {errors.category.message}
                   </p>
                 )}
               </div>
 
               <div>
-                <label
-                  className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-                  style={{
-                    color: "var(--muted-foreground)",
-                    fontFamily: "var(--font-display)",
-                  }}
-                >
+                <label className="block text-xs font-semibold mb-2 uppercase tracking-wider text-(--muted-foreground) font-display">
                   Subcategory *
                 </label>
                 <div className="relative">
@@ -490,15 +420,11 @@ export default function Videoform({
                   </select>
                   <ChevronDown
                     size={14}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                    style={{ color: "var(--muted-foreground)" }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-(--muted-foreground)"
                   />
                 </div>
                 {errors.subcategory && (
-                  <p
-                    className="text-xs mt-1"
-                    style={{ color: "var(--destructive)" }}
-                  >
+                  <p className="text-xs mt-1 text-(--destructive)">
                     {errors.subcategory.message}
                   </p>
                 )}
@@ -507,20 +433,13 @@ export default function Videoform({
 
             {/* Video URL */}
             <div>
-              <label
-                className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-                style={{
-                  color: "var(--muted-foreground)",
-                  fontFamily: "var(--font-display)",
-                }}
-              >
+              <label className="block text-xs font-semibold mb-2 uppercase tracking-wider text-(--muted-foreground) font-display">
                 Video URL *
               </label>
               <div className="relative">
                 <LinkIcon
                   size={14}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                  style={{ color: "var(--muted-foreground)" }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-(--muted-foreground)"
                 />
                 <input
                   {...register("videoUrl", {
@@ -539,10 +458,7 @@ export default function Videoform({
                 />
               </div>
               {errors.videoUrl && (
-                <p
-                  className="text-xs mt-1 flex items-center gap-1"
-                  style={{ color: "var(--destructive)" }}
-                >
+                <p className="text-xs mt-1 flex items-center gap-1 text-(--destructive)">
                   <AlertCircle size={10} />
                   {errors.videoUrl.message}
                 </p>
@@ -551,13 +467,7 @@ export default function Videoform({
 
             {/* Thumbnail upload */}
             <div>
-              <label
-                className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-                style={{
-                  color: "var(--muted-foreground)",
-                  fontFamily: "var(--font-display)",
-                }}
-              >
+              <label className="block text-xs font-semibold mb-2 uppercase tracking-wider text-(--muted-foreground) font-display">
                 Thumbnail *
                 <span
                   className="ml-2 normal-case font-normal"
@@ -568,13 +478,7 @@ export default function Videoform({
               </label>
 
               {thumbPreview ? (
-                <div
-                  className="relative rounded-xl overflow-hidden"
-                  style={{
-                    aspectRatio: "16/9",
-                    border: "1px solid var(--border)",
-                  }}
-                >
+                <div className="relative rounded-xl overflow-hidden aspect-video border border-(--border)">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={thumbPreview}
@@ -583,31 +487,18 @@ export default function Videoform({
                   />
 
                   {/* Overlay */}
-                  <div
-                    className="absolute inset-0 flex flex-col items-center justify-center gap-3"
-                    style={{ background: "rgba(0,0,0,0.55)" }}
-                  >
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[rgba(0,0,0,0.55)]">
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold"
-                      style={{
-                        background: "rgba(232,255,71,0.15)",
-                        border: "1px solid rgba(232,255,71,0.3)",
-                        color: "#e8ff47",
-                      }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-[rgba(232,255,71,)0.15] text-[e8ff47] border border-(--border)"
                     >
                       <ImagePlus size={13} /> Change Image
                     </button>
                     <button
                       type="button"
                       onClick={removeThumbnail}
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold"
-                      style={{
-                        background: "rgba(255,68,68,0.12)",
-                        border: "1px solid rgba(255,68,68,0.3)",
-                        color: "#ff6b6b",
-                      }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-[rgba(255,68,68)0.12] text-[#ff6b6b] border border-(--border)"
                     >
                       <Trash2 size={13} /> Remove
                     </button>
@@ -615,17 +506,10 @@ export default function Videoform({
 
                   {/* File info */}
                   {thumbFile && (
-                    <div
-                      className="absolute bottom-2 left-2 right-2 flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
-                      style={{
-                        background: "rgba(0,0,0,0.7)",
-                        color: "#fff",
-                        backdropFilter: "blur(4px)",
-                      }}
-                    >
-                      <Film size={10} style={{ flexShrink: 0 }} />
+                    <div className="absolute bottom-2 left-2 right-2 flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs bg-black/70 text-white backdrop-blur-sm">
+                      <Film size={10} className="shrink-0" />
                       <span className="flex-1 truncate">{thumbFile.name}</span>
-                      <span style={{ color: "#8a8a8a", flexShrink: 0 }}>
+                      <span className="text-[#8a8a8a] shrink-0">
                         {(thumbFile.size / 1024).toFixed(0)} KB
                       </span>
                     </div>
@@ -696,13 +580,7 @@ export default function Videoform({
 
             {/* Description */}
             <div className="lg:col-span-2">
-              <label
-                className="block text-xs font-semibold mb-2 uppercase tracking-wider"
-                style={{
-                  color: "var(--muted-foreground)",
-                  fontFamily: "var(--font-display)",
-                }}
-              >
+              <label className="block text-xs font-semibold mb-2 uppercase tracking-wider  text-(--muted-foreground) font-display">
                 Description *
               </label>
               <RichTextEditor
@@ -712,10 +590,7 @@ export default function Videoform({
               />
               {!descriptionHtml.replace(/<[^>]*>/g, "").trim() &&
                 isSubmitting && (
-                  <p
-                    className="text-xs mt-1 flex items-center gap-1"
-                    style={{ color: "var(--destructive)" }}
-                  >
+                  <p className="text-xs mt-1 flex items-center gap-1 text-(--destructive)">
                     <AlertCircle size={10} />
                     Description is required
                   </p>
@@ -726,18 +601,11 @@ export default function Videoform({
       </div>
 
       {/* ── Footer ── */}
-      <div
-        className="flex items-center justify-between px-6 py-4 border-t flex-shrink-0"
-        style={{ borderColor: "var(--border)", background: "var(--card)" }}
-      >
+      <div className="flex items-center justify-between px-6 py-4 border-t shrink-0 border border-(--border) bg-(--card)">
         <button
           type="button"
           onClick={onCancel}
-          className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-80"
-          style={{
-            color: "var(--muted-foreground)",
-            border: "1px solid var(--border)",
-          }}
+          className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-80 border border-(--borde) text-(--muted-foreground)"
         >
           Cancel
         </button>

@@ -8,28 +8,9 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        height: "100vh",
-        width: "100%",
-        // overflow: "hidden",
-        background: "var(--background)",
-      }}
-    >
+    <div className="flex h-screen w-full bg-(--background)">
       <Adminsidebar />
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          // overflow: "hidden",
-          minWidth: 0,
-        }}
-      >
-        {children}
-      </div>
+      <div className="flex min-w-0 flex-1 flex-col">{children}</div>
     </div>
   );
 }

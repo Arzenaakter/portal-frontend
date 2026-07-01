@@ -10,22 +10,11 @@ export default function AdminAnalyticsPage() {
       />
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="text-center">
-          <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-            style={{
-              background: "rgba(71,200,232,0.08)",
-              border: "1px solid rgba(71,200,232,0.15)",
-            }}
-          >
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 bg-[rgba(71,200,232,0.08)] border border-(--border)">
             <BarChart2 size={28} style={{ color: "#47c8e8" }} />
           </div>
-          <h2
-            className="text-xl font-bold mb-2"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            Analytics
-          </h2>
-          <p style={{ color: "var(--muted-foreground)" }} className="text-sm">
+          <h2 className="text-xl font-bold mb-2 font-display ">Analytics</h2>
+          <p className="text-sm text-(--muted-foreground)">
             Coming soon — this page is under construction.
           </p>
         </div>
